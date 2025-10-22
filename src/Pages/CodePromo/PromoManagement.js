@@ -697,36 +697,37 @@ const showSuccess = (message, type = 'success') => {
   </>
 )}
 
+
 {/* Alert de succès */}
 {showSuccessAlert && (
-  <div className="fixed top-4 right-4 z-50 animate-slide-in">
-    <div className={`bg-white rounded-xl shadow-2xl p-4 flex items-center gap-3 border-l-4 ${
+  <div className="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-auto z-50 animate-slide-in">
+    <div className={`bg-white rounded-xl shadow-2xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 border-l-4 ${
       alertType === 'green' ? 'border-green-500' :
       alertType === 'blue' ? 'border-blue-500' :
       alertType === 'red' ? 'border-red-500' : 'border-green-500'
     }`}>
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
         alertType === 'green' ? 'bg-green-100' :
         alertType === 'blue' ? 'bg-blue-100' :
         alertType === 'red' ? 'bg-red-100' : 'bg-green-100'
       }`}>
-        <Check className={`w-5 h-5 ${
+        <Check className={`w-4 h-4 sm:w-5 sm:h-5 ${
           alertType === 'green' ? 'text-green-600' :
           alertType === 'blue' ? 'text-blue-600' :
           alertType === 'red' ? 'text-red-600' : 'text-green-600'
         }`} />
       </div>
-      <div>
-        <p className="font-bold text-gray-800">
+      <div className="flex-1 min-w-0">
+        <p className="font-bold text-gray-800 text-sm sm:text-base">
           {alertType === 'green' ? 'Créé' : 
            alertType === 'blue' ? 'Mis à jour' : 
            alertType === 'red' ? 'Supprimé' : 'Succès'}
         </p>
-        <p className="text-sm text-gray-600">{successMessage}</p>
+        <p className="text-xs sm:text-sm text-gray-600 truncate">{successMessage}</p>
       </div>
       <button
         onClick={() => setShowSuccessAlert(false)}
-        className="ml-2 p-1 hover:bg-gray-100 rounded-full transition"
+        className="p-1 hover:bg-gray-100 rounded-full transition flex-shrink-0"
       >
         <X className="w-4 h-4 text-gray-400" />
       </button>
