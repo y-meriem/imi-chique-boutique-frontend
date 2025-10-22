@@ -5,6 +5,7 @@ import { ChevronLeft } from 'lucide-react';
 
 import Layout from '../../components/layout/Layout';
 import productService from '../../services/productService';
+import categoryService from '../../services/categoryService';
 
 const UpdateProduct = () => {
   const { id } = useParams();
@@ -37,17 +38,14 @@ const UpdateProduct = () => {
   const [taillesInitiales, setTaillesInitiales] = useState([]);
 
   const [categories, setCategories] = useState([]);
-
-// Charger les données du produit ET les catégories
 useEffect(() => {
   const loadData = async () => {
     try {
       setLoadingData(true);
       
-      // ✅ Charger les catégories ET le produit en parallèle
+      // ✅ Charger les catégories ET le produit en parallèle avec categoryService
       const [categoriesResponse, product] = await Promise.all([
-        fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/categories`)
-          .then(res => res.json()),
+        categoryService.getAllCategories(),  // ✅ Utiliser le service
         productService.getProductById(id)
       ]);
 
@@ -56,8 +54,7 @@ useEffect(() => {
         setCategories(categoriesResponse.data || []);
       }
 
-      // Charger le produit
-      
+      // Charger le produit (reste identique)
       setFormData({
         titre: product.titre || '',
         description: product.description || '',
@@ -70,46 +67,42 @@ useEffect(() => {
 
       // Charger les couleurs AVEC leurs IDs
       if (product.couleurs && product.couleurs.length > 0) {
-        
         const couleursAvecIds = product.couleurs.map(c => ({
           id: c.id,
           couleur: c.couleur,
           code_couleur: c.code_couleur || '#ec4899'
         }));
-        
         setCouleurs(couleursAvecIds);
       }
 
-     
       if (product.tailles && product.tailles.length > 0) {
-  setTailles(product.tailles);
-  setTaillesInitiales(product.tailles); // ✅ AJOUTER CETTE LIGNE
-}
+        setTailles(product.tailles);
+        setTaillesInitiales(product.tailles);
+      }
 
       if (product.images && product.images.length > 0) {
         setImages(product.images);
       }
 
+      // Charger le stock
       const stockData = {};
-if (product.stock && product.stock.length > 0) {
-  product.stock.forEach(s => {
-    if (s.taille) {
-      // Stock avec taille: clé = "rouge_m"
-      const couleurNom = product.couleurs.find(c => c.id === s.id_couleur)?.couleur;
-      if (couleurNom) {
-        const stockKey = `${couleurNom.toLowerCase().trim()}_${s.taille.toLowerCase()}`;
-        stockData[stockKey] = s.quantite;
+      if (product.stock && product.stock.length > 0) {
+        product.stock.forEach(s => {
+          if (s.taille) {
+            const couleurNom = product.couleurs.find(c => c.id === s.id_couleur)?.couleur;
+            if (couleurNom) {
+              const stockKey = `${couleurNom.toLowerCase().trim()}_${s.taille.toLowerCase()}`;
+              stockData[stockKey] = s.quantite;
+            }
+          } else {
+            const couleurIndex = product.couleurs.findIndex(c => c.id === s.id_couleur);
+            if (couleurIndex >= 0) {
+              stockData[`couleur_${couleurIndex}`] = s.quantite;
+            }
+          }
+        });
       }
-    } else {
-      // Stock par couleur uniquement: clé = "couleur_0"
-      const couleurIndex = product.couleurs.findIndex(c => c.id === s.id_couleur);
-      if (couleurIndex >= 0) {
-        stockData[`couleur_${couleurIndex}`] = s.quantite;
-      }
-    }
-  });
-}
-setStock(stockData);
+      setStock(stockData);
 
     } catch (error) {
       console.error('❌ Erreur chargement:', error);
