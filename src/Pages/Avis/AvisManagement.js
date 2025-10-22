@@ -89,60 +89,9 @@ const AvisManagement = () => {
     setShowConfirmModal(true);
   };
 
-  const updateStatut = async (id, statut) => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ statut })
-      });
 
-      const data = await response.json();
 
-      if (data.success) {
-        fetchAvis();
-        setShowModal(false);
-        setShowConfirmModal(false);
-        alert(`✅ Avis ${statut === 'approuve' ? 'approuvé' : 'rejeté'} avec succès`);
-      } else {
-        alert('❌ ' + data.message);
-      }
-    } catch (err) {
-      console.error('Erreur mise à jour:', err);
-      alert('❌ Erreur lors de la mise à jour');
-    }
-  };
-
-  const deleteAvis = async (id) => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        fetchAvis();
-        setShowConfirmModal(false);
-        alert('✅ Avis supprimé avec succès');
-      } else {
-        alert('❌ ' + data.message);
-      }
-    } catch (err) {
-      console.error('Erreur suppression:', err);
-      alert('❌ Erreur lors de la suppression');
-    }
-  };
+ 
 
   const handleConfirmAction = () => {
     if (!selectedAvis) return;
@@ -195,6 +144,74 @@ const AvisManagement = () => {
     approuve: avis.filter(a => a.statut === 'approuve').length,
     rejete: avis.filter(a => a.statut === 'rejete').length
   };
+  const [successMessage, setSuccessMessage] = useState('');
+const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
+// Ajouter cette fonction pour afficher les alertes
+const showSuccess = (message) => {
+  setSuccessMessage(message);
+  setShowSuccessAlert(true);
+  setTimeout(() => {
+    setShowSuccessAlert(false);
+  }, 3000);
+};
+
+// Modifier la fonction updateStatut
+const updateStatut = async (id, statut) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ statut })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      fetchAvis();
+      setShowModal(false);
+      setShowConfirmModal(false);
+      showSuccess(`Avis ${statut === 'approuve' ? 'approuvé' : 'rejeté'} avec succès`);
+    } else {
+      alert('❌ ' + data.message);
+    }
+  } catch (err) {
+    console.error('Erreur mise à jour:', err);
+    alert('❌ Erreur lors de la mise à jour');
+  }
+};
+
+// Modifier la fonction deleteAvis
+const deleteAvis = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      fetchAvis();
+      setShowConfirmModal(false);
+      showSuccess('Avis supprimé avec succès');
+    } else {
+      alert('❌ ' + data.message);
+    }
+  } catch (err) {
+    console.error('Erreur suppression:', err);
+    alert('❌ Erreur lors de la suppression');
+  }
+};
 
   if (loading) {
     return (
@@ -212,6 +229,26 @@ const AvisManagement = () => {
   return (
     <AdminLayout>
       <div className="min-h-screen p-4 sm:p-6">
+        // et avant le div "max-w-7xl mx-auto"
+{showSuccessAlert && (
+  <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+    <div className="bg-white rounded-2xl shadow-2xl border-2 border-green-200 p-4 flex items-center gap-3 max-w-md">
+      <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+        <Check className="w-6 h-6 text-green-600" />
+      </div>
+      <div className="flex-1">
+        <p className="font-bold text-gray-800 text-sm">Succès !</p>
+        <p className="text-gray-600 text-xs">{successMessage}</p>
+      </div>
+      <button
+        onClick={() => setShowSuccessAlert(false)}
+        className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition"
+      >
+        <X className="w-5 h-5" />
+      </button>
+    </div>
+  </div>
+)}
         <div className="max-w-7xl mx-auto">
           
           {/* Header */}
