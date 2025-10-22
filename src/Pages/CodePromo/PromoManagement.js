@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Tag, Plus, Edit2, Trash2, ToggleLeft, ToggleRight, TrendingUp, Calendar, Users, Search, X, AlertCircle } from 'lucide-react';
+import { Sparkles, Check,Tag, Plus, Edit2, Trash2, ToggleLeft, ToggleRight, TrendingUp, Calendar, Users, Search, X, AlertCircle } from 'lucide-react';
 import { promoService } from '../../services/promoService';
 import Layout from '../../components/layout/Layout';
 
@@ -7,8 +7,13 @@ export default function PromoManagement() {
   const [promos, setPromos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [promoToDelete, setPromoToDelete] = useState(null);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [editingPromo, setEditingPromo] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [alertType, setAlertType] = useState('success'); 
   const [formData, setFormData] = useState({
     code: '',
     type: 'pourcentage',
@@ -119,12 +124,12 @@ export default function PromoManagement() {
       };
 
       if (editingPromo) {
-        await promoService.updatePromo(editingPromo.id, promoData);
-        alert('✅ Code promo mis à jour avec succès');
-      } else {
-        await promoService.createPromo(promoData);
-        alert('✅ Code promo créé avec succès');
-      }
+  await promoService.updatePromo(editingPromo.id, promoData);
+  showSuccess('Code promo mis à jour avec succès', 'blue');
+} else {
+  await promoService.createPromo(promoData);
+  showSuccess('Code promo créé avec succès', 'green');
+}
 
       loadPromos();
       closeModal();
@@ -134,18 +139,17 @@ export default function PromoManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce code promo ?')) return;
-
-    try {
-      await promoService.deletePromo(id);
-      alert('✅ Code promo supprimé avec succès');
-      loadPromos();
-    } catch (error) {
-      console.error('Erreur suppression:', error);
-      alert('❌ ' + (error.message || 'Erreur lors de la suppression'));
-    }
-  };
+  const handleDelete = async () => {
+  try {
+    await promoService.deletePromo(promoToDelete.id);
+    showSuccess('Code promo supprimé avec succès', 'red');
+    loadPromos();
+    closeDeleteConfirm();
+  } catch (error) {
+    console.error('Erreur suppression:', error);
+    alert('❌ ' + (error.message || 'Erreur lors de la suppression'));
+  }
+};
 
   const handleToggleStatus = async (id) => {
     try {
@@ -177,6 +181,24 @@ export default function PromoManagement() {
     actifs: promos.filter(p => p.status === 'Actif').length,
     utilises: promos.reduce((sum, p) => sum + (p.utilisations_actuelles || 0), 0)
   };
+ 
+
+const openDeleteConfirm = (promo) => {
+  setPromoToDelete(promo);
+  setShowDeleteConfirm(true);
+};
+
+const closeDeleteConfirm = () => {
+  setShowDeleteConfirm(false);
+  setPromoToDelete(null);
+};
+
+const showSuccess = (message, type = 'success') => {
+  setSuccessMessage(message);
+  setAlertType(type);
+  setShowSuccessAlert(true);
+  setTimeout(() => setShowSuccessAlert(false), 3000);
+};
 
   return (
     <Layout>
@@ -362,7 +384,7 @@ export default function PromoManagement() {
                             <Edit2 className="w-5 h-5 text-blue-500" />
                           </button>
                           <button
-                            onClick={() => handleDelete(promo.id)}
+                            onClick={() => openDeleteConfirm(promo)}
                             className="p-2 hover:bg-red-50 rounded-lg transition"
                             title="Supprimer"
                           >
@@ -461,7 +483,7 @@ export default function PromoManagement() {
                     <Edit2 className="w-4 h-4 text-blue-500" />
                   </button>
                   <button
-                    onClick={() => handleDelete(promo.id)}
+                    onClick={() => openDeleteConfirm(promo)}
                     className="p-2 bg-red-50 active:bg-red-100 rounded-lg transition"
                   >
                     <Trash2 className="w-4 h-4 text-red-500" />
@@ -633,6 +655,84 @@ export default function PromoManagement() {
             </div>
           </>
         )}
+        {/* Modal de confirmation de suppression */}
+{showDeleteConfirm && (
+  <>
+    <div className="fixed inset-0 bg-black/50 z-40" onClick={closeDeleteConfirm} />
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+            <AlertCircle className="w-6 h-6 text-red-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-800">Confirmer la suppression</h3>
+            <p className="text-sm text-gray-600">Cette action est irréversible</p>
+          </div>
+        </div>
+        
+        <div className="bg-gray-50 rounded-xl p-4 mb-6">
+          <p className="text-sm text-gray-700">
+            Voulez-vous vraiment supprimer le code promo{' '}
+            <span className="font-bold text-pink-600">{promoToDelete?.code}</span> ?
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={closeDeleteConfirm}
+            className="flex-1 px-4 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 active:bg-gray-100 transition"
+          >
+            Annuler
+          </button>
+          <button
+            onClick={handleDelete}
+            className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold hover:shadow-lg active:scale-95 transition"
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+  </>
+)}
+
+{/* Alert de succès */}
+{showSuccessAlert && (
+  <div className="fixed top-4 right-4 z-50 animate-slide-in">
+    <div className={`bg-white rounded-xl shadow-2xl p-4 flex items-center gap-3 border-l-4 ${
+      alertType === 'green' ? 'border-green-500' :
+      alertType === 'blue' ? 'border-blue-500' :
+      alertType === 'red' ? 'border-red-500' : 'border-green-500'
+    }`}>
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+        alertType === 'green' ? 'bg-green-100' :
+        alertType === 'blue' ? 'bg-blue-100' :
+        alertType === 'red' ? 'bg-red-100' : 'bg-green-100'
+      }`}>
+        <Check className={`w-5 h-5 ${
+          alertType === 'green' ? 'text-green-600' :
+          alertType === 'blue' ? 'text-blue-600' :
+          alertType === 'red' ? 'text-red-600' : 'text-green-600'
+        }`} />
+      </div>
+      <div>
+        <p className="font-bold text-gray-800">
+          {alertType === 'green' ? 'Créé' : 
+           alertType === 'blue' ? 'Mis à jour' : 
+           alertType === 'red' ? 'Supprimé' : 'Succès'}
+        </p>
+        <p className="text-sm text-gray-600">{successMessage}</p>
+      </div>
+      <button
+        onClick={() => setShowSuccessAlert(false)}
+        className="ml-2 p-1 hover:bg-gray-100 rounded-full transition"
+      >
+        <X className="w-4 h-4 text-gray-400" />
+      </button>
+    </div>
+  </div>
+)}
       </div>
     </div>
     </Layout>
