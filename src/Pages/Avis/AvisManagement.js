@@ -1,7 +1,7 @@
 // pages/admin/AvisManagement.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AdminLayout from '../../components/layout/Layout';
+import Layout from '../../components/layout/Layout';
 import { Star, Check, X, Trash2, Eye, AlertCircle, Filter, MessageSquare, Calendar, User, Package, Mail, Search } from 'lucide-react';
 
 const AvisManagement = () => {
@@ -16,6 +16,10 @@ const AvisManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [alertType, setAlertType] = useState('success');
+
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -89,10 +93,76 @@ const AvisManagement = () => {
     setShowConfirmModal(true);
   };
 
+const showSuccess = (message, type = 'success') => {
+  setSuccessMessage(message);
+  setAlertType(type);
+  setShowSuccessAlert(true);
+  setTimeout(() => {
+    setShowSuccessAlert(false);
+  }, 4000);
+};
 
+// Modifier updateStatut
+const updateStatut = async (id, statut) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ statut })
+    });
 
- 
+    const data = await response.json();
 
+    if (data.success) {
+      fetchAvis();
+      setShowModal(false);
+      setShowConfirmModal(false);
+      // Appeler avec le type correspondant
+      if (statut === 'approuve') {
+        showSuccess('Avis approuvé avec succès', 'approve');
+      } else {
+        showSuccess('Avis rejeté avec succès', 'reject');
+      }
+    } else {
+      alert('❌ ' + data.message);
+    }
+  } catch (err) {
+    console.error('Erreur mise à jour:', err);
+    alert('❌ Erreur lors de la mise à jour');
+  }
+};
+
+// Modifier deleteAvis
+const deleteAvis = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      fetchAvis();
+      setShowConfirmModal(false);
+      showSuccess('Avis supprimé avec succès', 'delete');
+    } else {
+      alert('❌ ' + data.message);
+    }
+  } catch (err) {
+    console.error('Erreur suppression:', err);
+    alert('❌ Erreur lors de la suppression');
+  }
+};
   const handleConfirmAction = () => {
     if (!selectedAvis) return;
 
@@ -144,111 +214,23 @@ const AvisManagement = () => {
     approuve: avis.filter(a => a.statut === 'approuve').length,
     rejete: avis.filter(a => a.statut === 'rejete').length
   };
-  const [successMessage, setSuccessMessage] = useState('');
-const [showSuccessAlert, setShowSuccessAlert] = useState(false);
-
-// Ajouter cette fonction pour afficher les alertes
-const showSuccess = (message) => {
-  setSuccessMessage(message);
-  setShowSuccessAlert(true);
-  setTimeout(() => {
-    setShowSuccessAlert(false);
-  }, 3000);
-};
-
-// Modifier la fonction updateStatut
-const updateStatut = async (id, statut) => {
-  try {
-    const token = localStorage.getItem('token');
-    
-    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ statut })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      fetchAvis();
-      setShowModal(false);
-      setShowConfirmModal(false);
-      showSuccess(`Avis ${statut === 'approuve' ? 'approuvé' : 'rejeté'} avec succès`);
-    } else {
-      alert('❌ ' + data.message);
-    }
-  } catch (err) {
-    console.error('Erreur mise à jour:', err);
-    alert('❌ Erreur lors de la mise à jour');
-  }
-};
-
-// Modifier la fonction deleteAvis
-const deleteAvis = async (id) => {
-  try {
-    const token = localStorage.getItem('token');
-    
-    const response = await fetch(`${API_URL}/api/avis/admin/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      fetchAvis();
-      setShowConfirmModal(false);
-      showSuccess('Avis supprimé avec succès');
-    } else {
-      alert('❌ ' + data.message);
-    }
-  } catch (err) {
-    console.error('Erreur suppression:', err);
-    alert('❌ Erreur lors de la suppression');
-  }
-};
 
   if (loading) {
     return (
-      <AdminLayout>
+      <Layout>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-500 mx-auto mb-4"></div>
             <p className="text-gray-600 font-bold">Chargement des avis...</p>
           </div>
         </div>
-      </AdminLayout>
+      </Layout>
     );
   }
 
   return (
-    <AdminLayout>
+    <Layout>
       <div className="min-h-screen p-4 sm:p-6">
-        // et avant le div "max-w-7xl mx-auto"
-{showSuccessAlert && (
-  <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
-    <div className="bg-white rounded-2xl shadow-2xl border-2 border-green-200 p-4 flex items-center gap-3 max-w-md">
-      <div className="flex-shrink-0 w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-        <Check className="w-6 h-6 text-green-600" />
-      </div>
-      <div className="flex-1">
-        <p className="font-bold text-gray-800 text-sm">Succès !</p>
-        <p className="text-gray-600 text-xs">{successMessage}</p>
-      </div>
-      <button
-        onClick={() => setShowSuccessAlert(false)}
-        className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition"
-      >
-        <X className="w-5 h-5" />
-      </button>
-    </div>
-  </div>
-)}
         <div className="max-w-7xl mx-auto">
           
           {/* Header */}
@@ -365,7 +347,77 @@ const deleteAvis = async (id) => {
               ))}
             </div>
           </div>
-
+{showSuccessAlert && (
+  <div className="mb-4 sm:mb-6 animate-slide-down">
+    <div className={`border-2 rounded-2xl p-4 shadow-lg ${
+      alertType === 'approve' 
+        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+        : alertType === 'reject'
+        ? 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200'
+        : alertType === 'delete'
+        ? 'bg-gradient-to-r from-pink-50 to-purple-50 border-pink-200'
+        : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+    }`}>
+      <div className="flex items-center gap-3">
+        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+          alertType === 'approve'
+            ? 'bg-green-100'
+            : alertType === 'reject'
+            ? 'bg-red-100'
+            : alertType === 'delete'
+            ? 'bg-pink-100'
+            : 'bg-blue-100'
+        }`}>
+          {alertType === 'approve' && <Check className="w-6 h-6 text-green-600" />}
+          {alertType === 'reject' && <X className="w-6 h-6 text-red-600" />}
+          {alertType === 'delete' && <Trash2 className="w-6 h-6 text-pink-600" />}
+          {alertType === 'success' && <Check className="w-6 h-6 text-blue-600" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`font-bold text-sm sm:text-base ${
+            alertType === 'approve'
+              ? 'text-green-800'
+              : alertType === 'reject'
+              ? 'text-red-800'
+              : alertType === 'delete'
+              ? 'text-pink-800'
+              : 'text-blue-800'
+          }`}>
+            {alertType === 'approve' && '✅ Approuvé !'}
+            {alertType === 'reject' && '🚫 Rejeté !'}
+            {alertType === 'delete' && '🗑️ Supprimé !'}
+            {alertType === 'success' && '✨ Succès !'}
+          </p>
+          <p className={`text-xs sm:text-sm ${
+            alertType === 'approve'
+              ? 'text-green-700'
+              : alertType === 'reject'
+              ? 'text-red-700'
+              : alertType === 'delete'
+              ? 'text-pink-700'
+              : 'text-blue-700'
+          }`}>
+            {successMessage}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowSuccessAlert(false)}
+          className={`flex-shrink-0 transition p-1 ${
+            alertType === 'approve'
+              ? 'text-green-400 hover:text-green-600'
+              : alertType === 'reject'
+              ? 'text-red-400 hover:text-red-600'
+              : alertType === 'delete'
+              ? 'text-pink-400 hover:text-pink-600'
+              : 'text-blue-400 hover:text-blue-600'
+          }`}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
           {/* Liste des avis - Format Cards pour mobile */}
           <div className="space-y-4">
             {filteredAvis.length === 0 ? (
@@ -669,7 +721,7 @@ const deleteAvis = async (id) => {
           </div>
         </div>
       )}
-    </AdminLayout>
+    </Layout>
   );
 };
 
