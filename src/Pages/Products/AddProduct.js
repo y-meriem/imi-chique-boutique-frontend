@@ -30,16 +30,16 @@ const AddProduct = () => {
 
   const taillesDisponibles = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const [categories, setCategories] = useState([]);
-  useEffect(() => {
+ useEffect(() => {
   const loadCategories = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/categories`);
-      const data = await response.json();
-      if (data.success) {
-        setCategories(data.data || []);
+      const response = await categoryService.getAllCategories();
+      if (response.success) {
+        setCategories(response.data || []);
       }
     } catch (error) {
       console.error('Erreur chargement catégories:', error);
+      setCategories([]);
     }
   };
   
