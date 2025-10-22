@@ -42,7 +42,8 @@ import MesCommandes from './Pages/Orders/MyOrders';
 
 function App() {
   return (
-    <Router>
+   <Router basename="/imi-chique-boutique-frontend">
+     
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
