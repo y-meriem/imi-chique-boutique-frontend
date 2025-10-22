@@ -545,14 +545,14 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
                   {/* Actions */}
                   <div className="grid grid-cols-3 gap-2">
                     <button
-                      onClick={() => handleView(product.id)}
+                      onClick={() => navigate(`/products/${product.id}`)}
                       className="bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl transition-all font-bold text-sm flex items-center justify-center gap-1 hover:scale-105 shadow-md"
                     >
                       <Eye size={16} />
                       <span className="hidden sm:inline">Voir</span>
                     </button>
                     <button
-                      onClick={() => handleEdit(product.id)}
+                       onClick={() => navigate(`/products/edit/${product.id}`)}
                       className="bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-xl transition-all font-bold text-sm flex items-center justify-center gap-1 hover:scale-105 shadow-md"
                     >
                       <Edit2 size={16} />
