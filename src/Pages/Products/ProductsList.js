@@ -102,12 +102,12 @@ const ProductList = () => {
 
   const handleView = (id) => {
     // Navigation vers la page de détail du produit
-    window.location.href = `/products/${id}`;
+     navigate(`/products/${id}`);
   };
 
   const handleEdit = (id) => {
     // Navigation vers la page d'édition du produit
-    window.location.href = `/products/edit/${id}`;
+    navigate(`/products/edit/${id}`);
   };
 
   const handleColorClick = (productId, color) => {
