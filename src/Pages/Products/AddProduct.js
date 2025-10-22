@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import productService from '../../services/productService';
+import categoryService from '../../services/categoryService';
+
 import {useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
