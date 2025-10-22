@@ -13,10 +13,10 @@ export default function Navbar({ showMenu, setShowMenu, cart, setShowCart }) {
         </button>
 
         <div className="text-center">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-400 bg-clip-text text-transparent flex items-center gap-0.5">
-            <Sparkles className="w-4 h-4 text-pink-400" />
-            Imi Chique Boutique
-            <Moon className="w-4 h-4 text-pink-600" />
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-400 bg-clip-text text-transparent flex items-center gap-1 sm:gap-2">
+            <Sparkles className="w-6 h-6 sm:w-5 sm:h-5 text-pink-400 flex-shrink-0" />
+            <span className="whitespace-nowrap">Imi Chique Boutique</span>
+            <Moon className="w-6 h-6 sm:w-5 sm:h-5 text-pink-600 flex-shrink-0" />
           </h1>
           <p className="text-xs text-gray-500 font-medium">
             Mode, beauté & accessoires du quotidien.
