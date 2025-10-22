@@ -130,7 +130,7 @@ const CategoryList = () => {
                   {category.image_url ? (
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        src={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${category.image_url}`}
+                        src={category.image_url} 
                         alt={category.nom}
                         className="w-full h-full object-cover"
                         onError={(e) => {
