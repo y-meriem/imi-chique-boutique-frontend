@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import categoryService from '../../services/categoryService';
 import Layout from '../../components/layout/Layout';
 import { Trash2 ,Edit} from 'lucide-react';
+const [imageErrors, setImageErrors] = useState({});
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -127,29 +128,37 @@ const CategoryList = () => {
                   className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300"
                 >
                   {/* Image de la catégorie */}
-                  {category.image_url ? (
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={category.image_url} 
-                        alt={category.nom}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"%3E%3Crect fill="%23f3f4f6" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="48" fill="%239ca3af"%3E🏷️%3C/text%3E%3C/svg%3E';
-                        }}
-                      />
-                      <div className="absolute top-3 right-3 bg-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                        #{category.id}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center relative">
-                      <span className="text-7xl">🏷️</span>
-                      <div className="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-                        #{category.id}
-                      </div>
-                    </div>
-                  )}
+                 {category.image_url ? (
+  <div className="relative h-48 overflow-hidden bg-gray-100">
+    <img
+      src={category.image_url} 
+      alt={category.nom}
+      className="w-full h-full object-cover"
+      onError={(e) => {
+        // Cache l'image et affiche le fallback
+        e.target.style.display = 'none';
+        e.target.parentElement.innerHTML = `
+          <div class="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
+            <span class="text-7xl">🏷️</span>
+          </div>
+          <div class="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+            #${category.id}
+          </div>
+        `;
+      }}
+    />
+    <div className="absolute top-3 right-3 bg-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+      #{category.id}
+    </div>
+  </div>
+) : (
+  <div className="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center relative">
+    <span className="text-7xl">🏷️</span>
+    <div className="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+      #{category.id}
+    </div>
+  </div>
+)}
 
                   {/* Contenu */}
                   <div className="p-5">
