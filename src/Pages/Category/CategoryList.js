@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import categoryService from '../../services/categoryService';
 import Layout from '../../components/layout/Layout';
 import { Trash2 ,Edit} from 'lucide-react';
-const [imageErrors, setImageErrors] = useState({});
+
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-
+const [imageErrors, setImageErrors] = useState({});
   useEffect(() => {
     loadCategories();
   }, []);
