@@ -562,29 +562,29 @@ export default function PromoManagement() {
                         </div>
                       )}
 
-                      <div className="grid grid-cols-2 gap-3 md:gap-4">
-                        <div>
-                          <label className="block text-xs md:text-sm font-bold text-gray-700 mb-1.5 md:mb-2">Date début *</label>
-                          <input
-                            type="date"
-                            value={formData.date_debut}
-                            onChange={(e) => setFormData({...formData, date_debut: e.target.value})}
-                            className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.date_debut ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-xs md:text-base`}
-                          />
-                          {errors.date_debut && <p className="text-red-500 text-xs mt-1">{errors.date_debut}</p>}
-                        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+  <div>
+    <label className="block text-xs md:text-sm font-bold text-gray-700 mb-1.5 md:mb-2">Date début *</label>
+    <input
+      type="date"
+      value={formData.date_debut}
+      onChange={(e) => setFormData({...formData, date_debut: e.target.value})}
+      className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.date_debut ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-sm md:text-base`}
+    />
+    {errors.date_debut && <p className="text-red-500 text-xs mt-1">{errors.date_debut}</p>}
+  </div>
 
-                        <div>
-                          <label className="block text-xs md:text-sm font-bold text-gray-700 mb-1.5 md:mb-2">Date fin *</label>
-                          <input
-                            type="date"
-                            value={formData.date_fin}
-                            onChange={(e) => setFormData({...formData, date_fin: e.target.value})}
-                            className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.date_fin ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-xs md:text-base`}
-                          />
-                          {errors.date_fin && <p className="text-red-500 text-xs mt-1">{errors.date_fin}</p>}
-                        </div>
-                      </div>
+  <div>
+    <label className="block text-xs md:text-sm font-bold text-gray-700 mb-1.5 md:mb-2">Date fin *</label>
+    <input
+      type="date"
+      value={formData.date_fin}
+      onChange={(e) => setFormData({...formData, date_fin: e.target.value})}
+      className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.date_fin ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-sm md:text-base`}
+    />
+    {errors.date_fin && <p className="text-red-500 text-xs mt-1">{errors.date_fin}</p>}
+  </div>
+</div>
 
                       <div>
                         <label className="block text-xs md:text-sm font-bold text-gray-700 mb-1.5 md:mb-2">Utilisations max</label>
