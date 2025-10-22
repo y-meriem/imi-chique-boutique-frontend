@@ -100,16 +100,6 @@ const ProductList = () => {
   }
 };
 
-  const handleView = (id) => {
-    // Navigation vers la page de détail du produit
-     navigate(`/products/${id}`);
-  };
-
-  const handleEdit = (id) => {
-    // Navigation vers la page d'édition du produit
-    navigate(`/products/edit/${id}`);
-  };
-
   const handleColorClick = (productId, color) => {
     setSelectedColors(prev => ({
       ...prev,
@@ -691,14 +681,14 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
                 {/* Actions */}
                 <div className="flex sm:flex-col gap-2 justify-center items-center">
                   <button
-                    onClick={() => handleView(product.id)}
+                    onClick={() => navigate(`/products/${product.id}`)}
                     className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-xl transition-all flex items-center justify-center hover:scale-110 shadow-md"
                     title="Voir le produit"
                   >
                     <Eye size={18} />
                   </button>
                   <button
-                    onClick={() => handleEdit(product.id)}
+                     onClick={() => navigate(`/products/edit/${product.id}`)}
                     className="bg-amber-500 hover:bg-amber-600 text-white p-3 rounded-xl transition-all flex items-center justify-center hover:scale-110 shadow-md"
                     title="Modifier"
                   >
