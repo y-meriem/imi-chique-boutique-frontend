@@ -3,18 +3,28 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import categoryService from '../../services/categoryService';
 import Layout from '../../components/layout/Layout';
-import { Trash2 ,Edit} from 'lucide-react';
-
+import { Trash2, Edit } from 'lucide-react';
 
 const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-const [imageErrors, setImageErrors] = useState({});
+  const [imageErrors, setImageErrors] = useState({});
+
   useEffect(() => {
     loadCategories();
   }, []);
+
+  // 🐛 DEBUG: Afficher les URLs dans la console
+  useEffect(() => {
+    if (categories.length > 0) {
+      console.log('📦 Toutes les catégories:', categories);
+      categories.forEach(cat => {
+        console.log(`🏷️ ${cat.nom}:`, cat.image_url);
+      });
+    }
+  }, [categories]);
 
   const loadCategories = async () => {
     try {
@@ -128,37 +138,36 @@ const [imageErrors, setImageErrors] = useState({});
                   className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300"
                 >
                   {/* Image de la catégorie */}
-                 {category.image_url ? (
-  <div className="relative h-48 overflow-hidden bg-gray-100">
-    <img
-      src={category.image_url} 
-      alt={category.nom}
-      className="w-full h-full object-cover"
-      onError={(e) => {
-        // Cache l'image et affiche le fallback
-        e.target.style.display = 'none';
-        e.target.parentElement.innerHTML = `
-          <div class="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
-            <span class="text-7xl">🏷️</span>
-          </div>
-          <div class="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-            #${category.id}
-          </div>
-        `;
-      }}
-    />
-    <div className="absolute top-3 right-3 bg-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-      #{category.id}
-    </div>
-  </div>
-) : (
-  <div className="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center relative">
-    <span className="text-7xl">🏷️</span>
-    <div className="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
-      #{category.id}
-    </div>
-  </div>
-)}
+                  {category.image_url && !imageErrors[category.id] ? (
+                    <div className="relative h-48 overflow-hidden bg-gray-100">
+                      {/* 🐛 DEBUG: Afficher l'URL temporairement */}
+                      <div className="absolute top-0 left-0 bg-yellow-200 text-xs p-1 z-50 max-w-full overflow-hidden text-black">
+                        {category.image_url.substring(0, 50)}...
+                      </div>
+                      
+                      <img
+                        src={category.image_url}
+                        alt={category.nom}
+                        className="w-full h-full object-cover"
+                        crossOrigin="anonymous"
+                        onLoad={() => console.log('✅ Image chargée:', category.nom)}
+                        onError={() => {
+                          console.error('❌ Erreur image:', category.nom, category.image_url);
+                          setImageErrors(prev => ({ ...prev, [category.id]: true }));
+                        }}
+                      />
+                      <div className="absolute top-3 right-3 bg-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                        #{category.id}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-48 bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center relative">
+                      <span className="text-7xl">🏷️</span>
+                      <div className="absolute top-3 right-3 bg-white text-pink-600 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                        #{category.id}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Contenu */}
                   <div className="p-5">
@@ -179,7 +188,7 @@ const [imageErrors, setImageErrors] = useState({});
 
                     {/* Boutons d'action */}
                     <div className="flex gap-2">
-                       <Link
+                      <Link
                         to={`/categories/update/${category.id}`}
                         className="flex-1 px-3 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all font-bold text-center text-sm shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
                       >
