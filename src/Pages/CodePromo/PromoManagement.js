@@ -182,82 +182,87 @@ export default function PromoManagement() {
     <Layout>
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+       {/* Header */}
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300  bg-clip-text text-transparent mb-2 flex items-center gap-3">
-                  <Sparkles className="w-8 h-8 text-pink-500" />
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 bg-clip-text text-transparent mb-2 flex items-center gap-2 sm:gap-3">
+                  <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
                   Codes Promo
                 </h1>
-                <p className="text-gray-600 font-medium">
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
                   Créez et gérez vos codes promotionnels
                 </p>
               </div>
               <button
                 onClick={() => openModal()}
-                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-400 text-white rounded-xl hover:shadow-xl hover:scale-105 active:scale-95 transition-all font-bold text-center flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-400 text-white rounded-xl hover:shadow-xl hover:scale-105 active:scale-95 transition-all font-bold text-sm sm:text-base text-center flex items-center justify-center gap-2"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
                 Nouveau Code
               </button>
             </div>
 
-            {/* Recherche */}
-            <div className="mb-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Rechercher un code promo..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-5 py-3 pl-12 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition"
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl p-4 border border-pink-200">
+            {/* Statistiques */}
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-4 sm:mt-6">
+              <div className="bg-gradient-to-br from-pink-50 to-rose-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-pink-200/50 hover:shadow-xl hover:shadow-pink-300/50 transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Total</p>
-                    <p className="text-2xl font-black text-pink-600">{stats.total}</p>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">Total</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-pink-600">{stats.total}</p>
                   </div>
-                  <Tag className="w-8 h-8 text-pink-500" />
+                  <Tag className="w-8 h-8 sm:w-12 sm:h-12 text-pink-500 opacity-20" />
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-emerald-100 to-teal-100 rounded-xl p-4 border border-emerald-200">
+              <div className="bg-gradient-to-br from-emerald-50 to-teal-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/50 transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Actifs</p>
-                    <p className="text-2xl font-black text-emerald-600">{stats.actifs}</p>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">Actifs</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{stats.actifs}</p>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-emerald-500" />
+                  <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-500 opacity-20" />
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl p-4 border border-blue-200">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-shadow">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-600 font-medium">Utilisations</p>
-                    <p className="text-2xl font-black text-blue-600">{stats.utilises}</p>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">Utilisations</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.utilises}</p>
                   </div>
-                  <Users className="w-8 h-8 text-blue-500" />
+                  <Users className="w-8 h-8 sm:w-12 sm:h-12 text-blue-500 opacity-20" />
                 </div>
               </div>
             </div>
           </div>
 
+          {/* Recherche */}
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
+              <Search className="w-4 h-4 sm:w-5 sm:h-5 text-pink-600" />
+              <span className="text-sm sm:text-base font-bold text-gray-800">Rechercher</span>
+            </div>
+
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Rechercher un code promo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-2.5 sm:py-3 pl-10 sm:pl-12 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition text-sm sm:text-base"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              )}
+            </div>
+          </div>
        
 
         {/* Desktop Table */}
