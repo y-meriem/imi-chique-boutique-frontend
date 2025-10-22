@@ -140,17 +140,11 @@ const CategoryList = () => {
                   {/* Image de la catégorie */}
                   {category.image_url && !imageErrors[category.id] ? (
                     <div className="relative h-48 overflow-hidden bg-gray-100">
-                      {/* 🐛 DEBUG: Afficher l'URL temporairement */}
-                      <div className="absolute top-0 left-0 bg-yellow-200 text-xs p-1 z-50 max-w-full overflow-hidden text-black">
-                        {category.image_url.substring(0, 50)}...
-                      </div>
-                      
                       <img
                         src={category.image_url}
                         alt={category.nom}
                         className="w-full h-full object-cover"
                         crossOrigin="anonymous"
-                        onLoad={() => console.log('✅ Image chargée:', category.nom)}
                         onError={() => {
                           console.error('❌ Erreur image:', category.nom, category.image_url);
                           setImageErrors(prev => ({ ...prev, [category.id]: true }));
