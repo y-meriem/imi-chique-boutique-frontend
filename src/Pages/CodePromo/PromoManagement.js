@@ -125,10 +125,10 @@ export default function PromoManagement() {
 
       if (editingPromo) {
   await promoService.updatePromo(editingPromo.id, promoData);
-  showSuccess('Code promo mis à jour avec succès', 'blue');
+  showSuccess('Code promo mis à jour avec succès', 'update');
 } else {
   await promoService.createPromo(promoData);
-  showSuccess('Code promo créé avec succès', 'green');
+  showSuccess('Code promo créé avec succès', 'create');
 }
 
       loadPromos();
@@ -142,7 +142,7 @@ export default function PromoManagement() {
   const handleDelete = async () => {
   try {
     await promoService.deletePromo(promoToDelete.id);
-    showSuccess('Code promo supprimé avec succès', 'red');
+    showSuccess('Code promo supprimé avec succès', 'delete');
     loadPromos();
     closeDeleteConfirm();
   } catch (error) {
@@ -285,7 +285,79 @@ const showSuccess = (message, type = 'success') => {
               )}
             </div>
           </div>
-       
+       {/* Alert de succès */}
+{showSuccessAlert && (
+  <div className="mb-4 sm:mb-6 animate-slide-down">
+    <div className={`border-2 rounded-2xl p-4 shadow-lg ${
+      alertType === 'create' 
+        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+        : alertType === 'update'
+        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+        : alertType === 'delete'
+        ? 'bg-gradient-to-r from-pink-50 to-purple-50 border-pink-200'
+        : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+    }`}>
+      <div className="flex items-center gap-3">
+        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+          alertType === 'create'
+            ? 'bg-green-100'
+            : alertType === 'update'
+            ? 'bg-blue-100'
+            : alertType === 'delete'
+            ? 'bg-pink-100'
+            : 'bg-green-100'
+        }`}>
+          {alertType === 'create' && <Plus className="w-6 h-6 text-green-600" />}
+          {alertType === 'update' && <Check className="w-6 h-6 text-blue-600" />}
+          {alertType === 'delete' && <Trash2 className="w-6 h-6 text-pink-600" />}
+          {alertType === 'success' && <Check className="w-6 h-6 text-green-600" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`font-bold text-sm sm:text-base ${
+            alertType === 'create'
+              ? 'text-green-800'
+              : alertType === 'update'
+              ? 'text-blue-800'
+              : alertType === 'delete'
+              ? 'text-pink-800'
+              : 'text-green-800'
+          }`}>
+            {alertType === 'create' && '✨ Créé !'}
+            {alertType === 'update' && '✅ Mis à jour !'}
+            {alertType === 'delete' && '🗑️ Supprimé !'}
+            {alertType === 'success' && '✨ Succès !'}
+          </p>
+          <p className={`text-xs sm:text-sm ${
+            alertType === 'create'
+              ? 'text-green-700'
+              : alertType === 'update'
+              ? 'text-blue-700'
+              : alertType === 'delete'
+              ? 'text-pink-700'
+              : 'text-green-700'
+          }`}>
+            {successMessage}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowSuccessAlert(false)}
+          className={`flex-shrink-0 transition p-1 ${
+            alertType === 'create'
+              ? 'text-green-400 hover:text-green-600'
+              : alertType === 'update'
+              ? 'text-blue-400 hover:text-blue-600'
+              : alertType === 'delete'
+              ? 'text-pink-400 hover:text-pink-600'
+              : 'text-green-400 hover:text-green-600'
+          }`}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {/* Desktop Table */}
         <div className="hidden lg:block bg-white rounded-2xl shadow-lg overflow-hidden">
@@ -656,81 +728,55 @@ const showSuccess = (message, type = 'success') => {
           </>
         )}
         {/* Modal de confirmation de suppression */}
-{showDeleteConfirm && (
-  <>
-    <div className="fixed inset-0 bg-black/50 z-40" onClick={closeDeleteConfirm} />
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-            <AlertCircle className="w-6 h-6 text-red-600" />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-gray-800">Confirmer la suppression</h3>
-            <p className="text-sm text-gray-600">Cette action est irréversible</p>
-          </div>
+{showDeleteConfirm && promoToDelete && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    onClick={closeDeleteConfirm}
+  >
+    <div
+      className="bg-white rounded-2xl shadow-2xl max-w-md w-full"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="p-6 rounded-t-2xl bg-red-50">
+        <div className="flex items-center gap-3">
+          <Trash2 className="w-8 h-8 text-red-600" />
+          <h3 className="text-xl font-bold text-gray-800">Supprimer le code promo ?</h3>
         </div>
-        
+      </div>
+
+      <div className="p-6">
         <div className="bg-gray-50 rounded-xl p-4 mb-6">
+          <p className="text-sm text-gray-600 mb-2">
+            <span className="font-bold">Code :</span> {promoToDelete.code}
+          </p>
           <p className="text-sm text-gray-700">
-            Voulez-vous vraiment supprimer le code promo{' '}
-            <span className="font-bold text-pink-600">{promoToDelete?.code}</span> ?
+            <span className="font-bold">Réduction :</span>{' '}
+            {promoToDelete.pourcentage_reduction 
+              ? `${promoToDelete.pourcentage_reduction}%`
+              : `${promoToDelete.montant_reduction} DA`
+            }
           </p>
         </div>
+
+        <p className="text-sm text-gray-600 mb-6">
+          ⚠️ Cette action est irréversible !
+        </p>
 
         <div className="flex gap-3">
           <button
             onClick={closeDeleteConfirm}
-            className="flex-1 px-4 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 active:bg-gray-100 transition"
+            className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-100 transition"
           >
             Annuler
           </button>
           <button
             onClick={handleDelete}
-            className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold hover:shadow-lg active:scale-95 transition"
+            className="flex-1 px-4 py-3 rounded-xl font-bold text-white transition hover:shadow-lg bg-gradient-to-r from-red-500 to-pink-500"
           >
             Supprimer
           </button>
         </div>
       </div>
-    </div>
-  </>
-)}
-
-
-{/* Alert de succès */}
-{showSuccessAlert && (
-  <div className="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 sm:w-auto z-50 animate-slide-in">
-    <div className={`bg-white rounded-xl shadow-2xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 border-l-4 ${
-      alertType === 'green' ? 'border-green-500' :
-      alertType === 'blue' ? 'border-blue-500' :
-      alertType === 'red' ? 'border-red-500' : 'border-green-500'
-    }`}>
-      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-        alertType === 'green' ? 'bg-green-100' :
-        alertType === 'blue' ? 'bg-blue-100' :
-        alertType === 'red' ? 'bg-red-100' : 'bg-green-100'
-      }`}>
-        <Check className={`w-4 h-4 sm:w-5 sm:h-5 ${
-          alertType === 'green' ? 'text-green-600' :
-          alertType === 'blue' ? 'text-blue-600' :
-          alertType === 'red' ? 'text-red-600' : 'text-green-600'
-        }`} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-bold text-gray-800 text-sm sm:text-base">
-          {alertType === 'green' ? 'Créé' : 
-           alertType === 'blue' ? 'Mis à jour' : 
-           alertType === 'red' ? 'Supprimé' : 'Succès'}
-        </p>
-        <p className="text-xs sm:text-sm text-gray-600 truncate">{successMessage}</p>
-      </div>
-      <button
-        onClick={() => setShowSuccessAlert(false)}
-        className="p-1 hover:bg-gray-100 rounded-full transition flex-shrink-0"
-      >
-        <X className="w-4 h-4 text-gray-400" />
-      </button>
     </div>
   </div>
 )}
