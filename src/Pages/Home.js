@@ -188,7 +188,6 @@ const getStockStatusForColor = (product, color) => {
     }
   };
 
-  
 
   const getProductImage = (product, colorId = null) => {
     if (!product.images || product.images.length === 0) return null;
@@ -309,7 +308,8 @@ const getStockStatusForColor = (product, color) => {
   } finally {
     setSubmittingAvis(false);
   }
-};const toggleFavorite = async (productId) => {
+};
+const toggleFavorite = async (productId) => {
   const token = localStorage.getItem('token');
   
   if (!token) {
@@ -386,7 +386,7 @@ const getStockStatusForColor = (product, color) => {
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
         {/* Animated Background */}
-           <div className="fixed inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 bg-pink-200 rounded-full opacity-20 blur-3xl animate-pulse"></div>
         <div className="absolute top-60 right-20 w-40 h-40 bg-purple-200 rounded-full opacity-20 blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         <div className="absolute bottom-40 left-1/3 w-36 h-36 bg-blue-200 rounded-full opacity-20 blur-3xl animate-pulse" style={{animationDelay: '2s'}}></div>
@@ -412,7 +412,7 @@ const getStockStatusForColor = (product, color) => {
   <div className="max-w-7xl mx-auto px-4 pt-6 pb-8">
   <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white">
     <img 
-src={`${process.env.PUBLIC_URL}/logo.png`}
+     src={`${process.env.PUBLIC_URL}/logo.png`}
 
       alt="Imi Chique Boutique"
       className="w-full h-auto max-h-32 sm:max-h-36 md:max-h-40 lg:max-h-44 object-contain p-3 sm:p-4 md:p-5"
@@ -421,94 +421,171 @@ src={`${process.env.PUBLIC_URL}/logo.png`}
 </div>
 
         {/* Search Bar */}
-        <div className="max-w-7xl mx-auto px-4 mb-6">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Rechercher un produit..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none bg-white/80 backdrop-blur"
+<div className="max-w-7xl mx-auto px-4 mb-6">
+  <div className="relative">
+    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
+    <input
+      type="text"
+      placeholder="Rechercher un produit..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full pl-12 pr-12 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none bg-white/80 backdrop-blur shadow-md"
+    />
+    {/* Bouton pour effacer la recherche */}
+    {searchTerm && (
+      <button
+        onClick={() => setSearchTerm('')}
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors"
+      >
+        <X className="w-5 h-5" />
+      </button>
+    )}
+  </div>
+  
+  {/* Résultats de recherche */}
+  {searchTerm && (
+    <div className="mt-2 text-sm text-gray-600">
+      {filteredProducts.length} résultat{filteredProducts.length > 1 ? 's' : ''} trouvé{filteredProducts.length > 1 ? 's' : ''}
+    </div>
+  )}
+</div>
+
+       {/* Categories Section */}
+<div className="max-w-7xl mx-auto px-4 mb-8">
+  <div className="flex items-center justify-between mb-4">
+    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+      <TrendingUp className="w-6 h-6 text-pink-500" />
+      Catégories
+    </h2>
+    {selectedCategory && (
+      <button
+        onClick={() => setSelectedCategory(null)}
+        className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
+      >
+        <X className="w-4 h-4" />
+        Tout afficher
+      </button>
+    )}
+  </div>
+
+  {/* Desktop: Grid, Mobile: Scroll horizontal */}
+  <div className="lg:grid lg:grid-cols-4 xl:grid-cols-5 lg:gap-4 hidden">
+    {categories.map((category) => (
+      <button
+        key={category.id}
+        onClick={() => handleCategoryClick(category)}
+        className={`group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:scale-105 ${
+          selectedCategory?.id === category.id 
+            ? 'ring-4 ring-pink-400 scale-105' 
+            : ''
+        }`}
+      >
+        {/* Image */}
+        <div className="relative h-40 overflow-hidden">
+          {category.image_url ? (
+            <img 
+              src={`${API_URL}${category.image_url}`}
+              alt={category.nom}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextElementSibling.style.display = 'flex';
+              }}
             />
+          ) : null}
+          <div 
+            className="w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center text-5xl"
+            style={{ display: category.image_url ? 'none' : 'flex' }}
+          >
+            🛍️
           </div>
+          
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+          
+          {/* Nom de la catégorie */}
+          <div className="absolute bottom-0 left-0 right-0 p-3">
+            <h3 className="text-white font-bold text-base text-center drop-shadow-lg">
+              {category.nom}
+            </h3>
+          </div>
+
+          {/* Badge sélectionné */}
+          {selectedCategory?.id === category.id && (
+            <div className="absolute top-2 right-2 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+              ✓ Actif
+            </div>
+          )}
         </div>
 
-        {/* Categories Section */}
-        <div className="max-w-7xl mx-auto px-4 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-              <TrendingUp className="w-6 h-6 text-pink-500" />
-              Catégories
-            </h2>
-            {selectedCategory && (
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className="text-sm text-pink-500 hover:text-pink-600 font-medium flex items-center gap-1"
-              >
-                <X className="w-4 h-4" />
-                Tout afficher
-              </button>
+        {/* Flèche */}
+        <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur rounded-full p-1 shadow-md group-hover:bg-pink-500 group-hover:text-white transition-colors">
+          <ChevronRight className="w-4 h-4" />
+        </div>
+      </button>
+    ))}
+  </div>
+
+  {/* Mobile: Scroll horizontal */}
+  <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4">
+    <div className="flex gap-4 pb-2" style={{ minWidth: 'min-content' }}>
+      {categories.map((category) => (
+        <button
+          key={category.id}
+          onClick={() => handleCategoryClick(category)}
+          className={`group relative bg-white rounded-2xl overflow-hidden shadow-lg active:scale-95 transition-all flex-shrink-0 w-40 ${
+            selectedCategory?.id === category.id 
+              ? 'ring-4 ring-pink-400 scale-105' 
+              : ''
+          }`}
+        >
+          {/* Image */}
+          <div className="relative h-32 overflow-hidden">
+            {category.image_url ? (
+              <img 
+                src={`${API_URL}${category.image_url}`}
+                alt={category.nom}
+                className="w-full h-full object-cover transition-transform duration-300"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextElementSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div 
+              className="w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center text-4xl"
+              style={{ display: category.image_url ? 'none' : 'flex' }}
+            >
+              🛍️
+            </div>
+            
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            
+            {/* Nom de la catégorie */}
+            <div className="absolute bottom-0 left-0 right-0 p-2">
+              <h3 className="text-white font-bold text-sm text-center drop-shadow-lg">
+                {category.nom}
+              </h3>
+            </div>
+
+            {/* Badge sélectionné */}
+            {selectedCategory?.id === category.id && (
+              <div className="absolute top-2 right-2 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                ✓
+              </div>
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryClick(category)}
-                className={`group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all hover:scale-105 ${
-                  selectedCategory?.id === category.id 
-                    ? 'ring-4 ring-pink-400 scale-105' 
-                    : ''
-                }`}
-              >
-                {/* Image */}
-                <div className="relative h-32 sm:h-40 overflow-hidden">
-                  {category.image_url ? (
-                    <img 
-                      src={`${API_URL}${category.image_url}`}
-                      alt={category.nom}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div 
-                    className="w-full h-full bg-gradient-to-br from-pink-100 to-purple-100 flex items-center justify-center text-5xl"
-                    style={{ display: category.image_url ? 'none' : 'flex' }}
-                  >
-                    🛍️
-                  </div>
-                  
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                  
-                  {/* Nom de la catégorie */}
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <h3 className="text-white font-bold text-sm sm:text-base text-center drop-shadow-lg">
-                      {category.nom}
-                    </h3>
-                  </div>
-
-                  {/* Badge sélectionné */}
-                  {selectedCategory?.id === category.id && (
-                    <div className="absolute top-2 right-2 bg-pink-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-                      ✓ Actif
-                    </div>
-                  )}
-                </div>
-
-                {/* Flèche */}
-                <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur rounded-full p-1 shadow-md group-hover:bg-pink-500 group-hover:text-white transition-colors">
-                  <ChevronRight className="w-4 h-4" />
-                </div>
-              </button>
-            ))}
+          {/* Flèche */}
+          <div className="absolute bottom-2 right-2 bg-white/90 backdrop-blur rounded-full p-1 shadow-md">
+            <ChevronRight className="w-3 h-3" />
           </div>
-        </div>
+        </button>
+      ))}
+    </div>
+  </div>
+</div>
 
         {/* Trust Badges */}
         <div className="max-w-7xl mx-auto px-4 mb-8">
@@ -520,8 +597,8 @@ src={`${process.env.PUBLIC_URL}/logo.png`}
             </div>
             <div className="bg-white rounded-2xl p-4 text-center shadow-md border-2 border-purple-100">
               <div className="text-2xl mb-1">💝</div>
-              <p className="text-xs font-bold text-gray-700">Retour</p>
-              <p className="text-xs text-gray-500">30 jours</p>
+              <p className="text-xs font-bold text-gray-700">Satisfaction</p>
+              <p className="text-xs text-gray-500">100% garantie</p>
             </div>
             <div className="bg-white rounded-2xl p-4 text-center shadow-md border-2 border-blue-100">
               <div className="text-2xl mb-1">✨</div>
@@ -706,6 +783,9 @@ src={`${process.env.PUBLIC_URL}/logo.png`}
   </span>
 </button>
                       </div>
+
+
+
                     </div>
                   </div>
                 );
