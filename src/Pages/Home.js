@@ -34,7 +34,7 @@ const Home = () => {
   const [submittingAvis, setSubmittingAvis] = useState(false);
 
   const [generalAvis, setGeneralAvis] = useState([]);
-const [loadingAvis, setLoadingAvis] = useState(false);
+  const [loadingAvis, setLoadingAvis] = useState(false);
 
 // Ajouter cette fonction après fetchUser
 const fetchGeneralAvis = async () => {
@@ -658,19 +658,21 @@ const getStockStatusForColor = (product, color) => {
                       )}
 
                       <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <span className="text-xl font-bold bg-gradient-to-r from-pink-500 to-pink-400 bg-clip-text text-transparent">
-                            {prixFinal} DA
-                          </span>
-                          {remise > 0 && (
-                            <span className="block text-xs line-through text-gray-400">{product.prix} DA</span>
-                          )}
-                        </div>
-                         <button
+                       <div>
+    <span className="text-xl font-bold bg-gradient-to-r from-pink-500 to-pink-400 bg-clip-text text-transparent">
+      {Math.floor(prixFinal)} DA
+    </span>
+    {remise > 0 && (
+      <span className="block text-xs line-through text-gray-400">
+        {Math.floor(product.prix)} DA
+      </span>
+    )}
+  </div>
+                      
+          <button
   onClick={(e) => {
     e.stopPropagation();
     
-    // ✅ Vérifier le stock total
     const totalStock = getTotalStock(product);
     
     if (totalStock > 0) {
@@ -685,10 +687,22 @@ const getStockStatusForColor = (product, color) => {
     getTotalStock(product) > 0
       ? 'bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 hover:shadow-xl hover:scale-105' 
       : 'bg-gray-300 cursor-not-allowed'
-  } text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all flex items-center gap-1`}
+  } text-white rounded-full font-bold shadow-lg transition-all flex items-center justify-center gap-1
+  
+  /* 📱 Version Mobile */
+  px-2 py-2 text-xs
+  
+  /* 💻 Version Desktop */
+  lg:px-4 lg:py-2 lg:text-sm`}
 >
-  <ShoppingBag className="w-4 h-4" />
-  {getTotalStock(product) > 0 ? 'Ajouter' : 'Épuisé'}
+  <ShoppingBag className="w-4 h-4 lg:w-4 lg:h-4" />
+  <span className="hidden sm:inline">
+    {getTotalStock(product) > 0 ? 'Ajouter' : 'Épuisé'}
+  </span>
+  {/* Texte court pour mobile */}
+  <span className="sm:hidden">
+    {getTotalStock(product) > 0 ? '+' : '✕'}
+  </span>
 </button>
                       </div>
 
