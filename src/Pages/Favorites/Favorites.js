@@ -319,23 +319,17 @@ const Favorites = () => {
                             </span>
                           )}
                         </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (product.quantite > 0) {
-                              setSelectedProduct(product);
-                            }
-                          }}
-                          disabled={product.quantite === 0}
-                          className={`${
-                            product.quantite > 0 
-                              ? 'bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 hover:shadow-xl hover:scale-105' 
-                              : 'bg-gray-300 cursor-not-allowed'
-                          } text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all flex items-center gap-1`}
-                        >
-                          <ShoppingBag className="w-4 h-4" />
-                          {product.quantite > 0 ? 'Ajouter' : 'Épuisé'}
-                        </button>
+                      <button
+  onClick={(e) => {
+    e.stopPropagation();
+    navigate(`/products/${product.id}`);
+  }}
+  className="bg-gradient-to-r  from-pink-500 via-[#f77fbe] to-pink-300  text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all hover:shadow-xl hover:scale-105 flex items-center gap-1"
+>
+  <Sparkles className="w-4 h-4" />
+  Plus de détails
+</button>
+
                       </div>
 
                       {/* Stock */}
