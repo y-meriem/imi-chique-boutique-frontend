@@ -9,7 +9,7 @@ const MyAvis = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
@@ -28,7 +28,7 @@ const MyAvis = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${API_URL}/avis/my-avis`,
+        `${API_URL}/api/avis/my-avis`,
         getAuthHeaders()
       );
       setAvis(response.data.data);
