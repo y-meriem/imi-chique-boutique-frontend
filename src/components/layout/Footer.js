@@ -5,7 +5,7 @@ export default function Footer({ showMenu }) {
   return (
     <footer className={`bg-gradient-to-br from-pink-100 via-purple-50 to-pink-50 text-gray-800 transition-all duration-300 ${showMenu ? 'lg:ml-64' : ''} border-t-4 border-pink-200`}>
       {/* Decorative elements */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute top-0 left-0 w-64 h-64 bg-pink-300 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-300 rounded-full blur-3xl"></div>
       </div>
