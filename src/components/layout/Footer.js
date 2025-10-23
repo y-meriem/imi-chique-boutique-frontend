@@ -17,7 +17,7 @@ export default function Footer({ showMenu }) {
           {/* Icônes sociales */}
           <div className="flex items-center justify-center gap-4">
             <a 
-              href="https://www.facebook.com/imi.mene.2025" 
+              href="https://www.facebook.com/Imichiqueboutique/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-pink-200 hover:bg-pink-300 p-3 rounded-full transition transform hover:scale-110"
