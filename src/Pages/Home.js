@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
-import { Heart, ShoppingBag, Star, Sparkles, Search, ChevronRight, TrendingUp,Moon, X } from 'lucide-react';
+import { Heart, AlertCircle, CheckCircle,ShoppingBag, Star, Sparkles, Search, ChevronRight, TrendingUp,Moon, X } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -23,6 +23,8 @@ const Home = () => {
   const [showAllAvis, setShowAllAvis] = useState(false);
   const [showSizeError, setShowSizeError] = useState(false);
   const [showAvisModal, setShowAvisModal] = useState(false);
+  const [avisError, setAvisError] = useState('');
+const [avisSuccess, setAvisSuccess] = useState('');
 
   const [avisData, setAvisData] = useState({
     note: 0,
@@ -138,7 +140,8 @@ const getStockStatusForColor = (product, color) => {
       setLoading(false);
     }
   };
-  const fetchFavorites = async () => {
+// Après avoir récupéré les favoris, affichez les détails
+const fetchFavorites = async () => {
   const token = localStorage.getItem('token');
   if (!token) return;
   
@@ -149,8 +152,10 @@ const getStockStatusForColor = (product, color) => {
       }
     });
     const data = await response.json();
+    
     if (data.success) {
-      setFavorites(data.data.map(f => f.produit_id));
+      const favIds = data.data.map(f => f.id);
+      setFavorites(favIds);
     }
   } catch (err) {
     console.error('Erreur favoris:', err);
@@ -254,20 +259,22 @@ const getStockStatusForColor = (product, color) => {
   setSelectedSize(null);
   setShowSizeError(false);
 };
-  const handleSubmitAvis = async () => {
+const handleSubmitAvis = async () => {
+  setAvisError(''); // Réinitialiser les erreurs
+  setAvisSuccess('');
+  
   if (avisData.note === 0) {
-    alert('⚠️ Veuillez sélectionner une note');
+    setAvisError('⚠️ Veuillez sélectionner une note');
     return;
   }
   
   if (!avisData.commentaire.trim()) {
-    alert('⚠️ Veuillez écrire un commentaire');
+    setAvisError('⚠️ Veuillez écrire un commentaire');
     return;
   }
 
-  // Si l'utilisateur n'est pas connecté, vérifier nom et email
   if (!user && (!avisData.nom.trim() || !avisData.email.trim())) {
-    alert('⚠️ Veuillez remplir votre nom et email');
+    setAvisError('⚠️ Veuillez remplir votre nom et email');
     return;
   }
 
@@ -287,7 +294,7 @@ const getStockStatusForColor = (product, color) => {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        produit_id: null, // Avis général sur la boutique
+        produit_id: null,
         note: avisData.note,
         nom: avisData.nom,
         email: avisData.email,
@@ -298,13 +305,18 @@ const getStockStatusForColor = (product, color) => {
     const data = await response.json();
     
     if (data.success) {
-      alert('✅ Merci pour votre avis! Il sera publié après vérification.');
-      setShowAvisModal(false);
-      setAvisData({ note: 0, nom: '', email: '', commentaire: '' });
+      setAvisSuccess('✅ Merci pour votre avis! Il sera publié après vérification.');
+      // Réinitialiser après 3 secondes et fermer le modal
+      setTimeout(() => {
+        setShowAvisModal(false);
+        setAvisData({ note: 0, nom: '', email: '', commentaire: '' });
+        setAvisSuccess('');
+      }, 3000);
     } else {
-      alert('❌ ' + data.message);
+      setAvisError('❌ ' + data.message);
     }
   } catch (err) {
+    setAvisError('❌ Erreur lors de l\'envoi de l\'avis');
   } finally {
     setSubmittingAvis(false);
   }
@@ -903,6 +915,26 @@ const toggleFavorite = async (productId) => {
     <Sparkles className="w-6 h-6 text-pink-400" />
   </div>
 
+  {/* MESSAGE D'ERREUR */}
+  {avisError && (
+    <div className="mb-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-xl animate-shake">
+      <p className="text-red-700 text-sm font-semibold flex items-center gap-2">
+        <AlertCircle className="w-5 h-5" />
+        {avisError}
+      </p>
+    </div>
+  )}
+
+  {/* MESSAGE DE SUCCÈS */}
+  {avisSuccess && (
+    <div className="mb-4 p-4 bg-green-50 border-l-4 border-green-500 rounded-xl animate-fade-in">
+      <p className="text-green-700 text-sm font-semibold flex items-center gap-2">
+        <CheckCircle className="w-5 h-5" />
+        {avisSuccess}
+      </p>
+    </div>
+  )}
+
   {/* Étoiles */}
   <div className="mb-6 text-center">
     <p className="text-sm font-medium text-gray-600 mb-3">Notez votre expérience</p>
@@ -910,7 +942,10 @@ const toggleFavorite = async (productId) => {
       {[1, 2, 3, 4, 5].map((star) => (
         <button
           key={star}
-          onClick={() => setAvisData({...avisData, note: star})}
+          onClick={() => {
+            setAvisData({...avisData, note: star});
+            setAvisError(''); // Effacer l'erreur
+          }}
           className="hover:scale-110 transition-transform"
         >
           <Star 
@@ -947,14 +982,20 @@ const toggleFavorite = async (productId) => {
         type="text"
         placeholder="Votre nom"
         value={avisData.nom}
-        onChange={(e) => setAvisData({...avisData, nom: e.target.value})}
+        onChange={(e) => {
+          setAvisData({...avisData, nom: e.target.value});
+          setAvisError(''); // Effacer l'erreur
+        }}
         className="px-4 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none text-sm bg-white"
       />
       <input
         type="email"
         placeholder="Votre email"
         value={avisData.email}
-        onChange={(e) => setAvisData({...avisData, email: e.target.value})}
+        onChange={(e) => {
+          setAvisData({...avisData, email: e.target.value});
+          setAvisError(''); // Effacer l'erreur
+        }}
         className="px-4 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none text-sm bg-white"
       />
     </div>
@@ -965,7 +1006,10 @@ const toggleFavorite = async (productId) => {
     placeholder="Partagez votre expérience avec nous..."
     rows="3"
     value={avisData.commentaire}
-    onChange={(e) => setAvisData({...avisData, commentaire: e.target.value})}
+    onChange={(e) => {
+      setAvisData({...avisData, commentaire: e.target.value});
+      setAvisError(''); // Effacer l'erreur
+    }}
     className="w-full px-4 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-400 focus:outline-none text-sm resize-none bg-white mb-4"
   ></textarea>
 
