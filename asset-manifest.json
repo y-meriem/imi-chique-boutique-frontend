@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/imi-chique-boutique-frontend/static/css/main.92bb1889.css",
-    "main.js": "/imi-chique-boutique-frontend/static/js/main.553d197e.js",
+    "main.css": "/imi-chique-boutique-frontend/static/css/main.ec1cfec8.css",
+    "main.js": "/imi-chique-boutique-frontend/static/js/main.ea844ed6.js",
     "static/js/453.12bbce6c.chunk.js": "/imi-chique-boutique-frontend/static/js/453.12bbce6c.chunk.js",
     "index.html": "/imi-chique-boutique-frontend/index.html",
-    "main.92bb1889.css.map": "/imi-chique-boutique-frontend/static/css/main.92bb1889.css.map",
-    "main.553d197e.js.map": "/imi-chique-boutique-frontend/static/js/main.553d197e.js.map",
+    "main.ec1cfec8.css.map": "/imi-chique-boutique-frontend/static/css/main.ec1cfec8.css.map",
+    "main.ea844ed6.js.map": "/imi-chique-boutique-frontend/static/js/main.ea844ed6.js.map",
     "453.12bbce6c.chunk.js.map": "/imi-chique-boutique-frontend/static/js/453.12bbce6c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.92bb1889.css",
-    "static/js/main.553d197e.js"
+    "static/css/main.ec1cfec8.css",
+    "static/js/main.ea844ed6.js"
   ]
 }
