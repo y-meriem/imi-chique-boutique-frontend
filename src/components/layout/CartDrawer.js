@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { X, Trash2, Plus, Minus, ShoppingBag, Sparkles, Tag } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
 
 export default function CartDrawer({ showCart, setShowCart, cart, updateCartItem, removeFromCart, clearCart }) {
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(null);
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState('');
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const navigate = useNavigate();
 
   // Fonction pour appliquer le code promo
   const applyPromoCode = async () => {
@@ -16,7 +18,7 @@ export default function CartDrawer({ showCart, setShowCart, cart, updateCartItem
     setPromoError('');
     
     try {
-        const response = await fetch(`${API_URL}/promo/verify`, {
+        const response = await fetch(`${API_URL}/api/promo/verify`, {
           method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: promoCode.toUpperCase() })
@@ -237,7 +239,7 @@ export default function CartDrawer({ showCart, setShowCart, cart, updateCartItem
                   setShowCart(false);
                   // Sauvegarder les infos promo pour le checkout
                   localStorage.setItem('promoApplied', JSON.stringify(promoApplied));
-                  window.location.href = '/checkout';
+                  navigate('/checkout'); 
                 }}
                 className="w-full bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300  text-white py-3 rounded-full font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105 flex items-center justify-center gap-2"
               >
