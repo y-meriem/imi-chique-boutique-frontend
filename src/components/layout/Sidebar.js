@@ -38,7 +38,6 @@ export default function Sidebar({ showMenu, setShowMenu, cart, favorites }) {
   // Menu pour Visiteur (non connecté)
   const guestMenuItems = [
     { icon: Home, text: "Accueil", path: "/" },
-    { icon: ShoppingCart, text: "Mon Panier", path: "/panier", badge: cart?.length || 0 },
   ];
 
   // Choisir le menu approprié
