@@ -30,6 +30,22 @@ const Orders = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(10);
+  // Ajoutez ces states après vos autres useState
+const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+const [successMessage, setSuccessMessage] = useState('');
+const [alertType, setAlertType] = useState('success');
+
+// Ajoutez cette fonction après vos autres fonctions
+const showSuccess = (message, type = 'success') => {
+  setSuccessMessage(message);
+  setAlertType(type);
+  setShowSuccessAlert(true);
+  setTimeout(() => {
+    setShowSuccessAlert(false);
+  }, 4000);
+};
+
+
 
   useEffect(() => {
     fetchOrders();
@@ -127,23 +143,35 @@ const getRevenuForPeriod = () => {
       return sum + orderRevenu;
     }, 0);
 };
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      await orderService.updateOrderStatus(orderId, newStatus);
-      
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, statut: newStatus } : order
-      ));
+ // Modifiez la fonction handleStatusChange
+const handleStatusChange = async (orderId, newStatus) => {
+  try {
+    await orderService.updateOrderStatus(orderId, newStatus);
+    
+    setOrders(orders.map(order => 
+      order.id === orderId ? { ...order, statut: newStatus } : order
+    ));
 
-      if (selectedOrder?.id === orderId) {
-        setSelectedOrder({ ...selectedOrder, statut: newStatus });
-      }
-
-      alert('✅ Statut mis à jour avec succès');
-    } catch (error) {
-      alert('❌ Erreur lors de la mise à jour du statut');
+    if (selectedOrder?.id === orderId) {
+      setSelectedOrder({ ...selectedOrder, statut: newStatus });
     }
-  };
+
+    // Remplacez l'alert par :
+    const statusMessages = {
+      'en_attente': { msg: 'Commande mise en attente', type: 'warning' },
+      'confirmee': { msg: 'Commande confirmée avec succès', type: 'confirm' },
+      'livree': { msg: 'Commande marquée comme livrée', type: 'delivered' },
+      'annulee': { msg: 'Commande annulée', type: 'cancel' },
+      'retour': { msg: 'Commande marquée comme retournée', type: 'return' }
+    };
+
+    const status = statusMessages[newStatus] || { msg: 'Statut mis à jour', type: 'success' };
+    showSuccess(status.msg, status.type);
+
+  } catch (error) {
+    showSuccess('Erreur lors de la mise à jour du statut', 'error');
+  }
+};
 
   const openOrderDetails = async (orderId) => {
     try {
@@ -432,7 +460,102 @@ const getRevenuForPeriod = () => {
   <p className="text-sm font-medium mt-1 text-gray-600">Revenu Net (Livrées)</p>
 </div>
 </div>
-
+{/* Alert de succès */}
+{showSuccessAlert && (
+  <div className="mb-6 animate-slide-down">
+    <div className={`border-2 rounded-2xl p-4 shadow-lg ${
+      alertType === 'confirm' 
+        ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+        : alertType === 'delivered'
+        ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+        : alertType === 'cancel' || alertType === 'return'
+        ? 'bg-gradient-to-r from-red-50 to-pink-50 border-red-200'
+        : alertType === 'warning'
+        ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200'
+        : alertType === 'error'
+        ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-300'
+        : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'
+    }`}>
+      <div className="flex items-center gap-3">
+        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+          alertType === 'confirm'
+            ? 'bg-blue-100'
+            : alertType === 'delivered'
+            ? 'bg-green-100'
+            : alertType === 'cancel' || alertType === 'return'
+            ? 'bg-red-100'
+            : alertType === 'warning'
+            ? 'bg-yellow-100'
+            : alertType === 'error'
+            ? 'bg-red-100'
+            : 'bg-blue-100'
+        }`}>
+          {alertType === 'confirm' && <CheckCircle className="w-6 h-6 text-blue-600" />}
+          {alertType === 'delivered' && <Package className="w-6 h-6 text-green-600" />}
+          {alertType === 'cancel' && <XCircle className="w-6 h-6 text-red-600" />}
+          {alertType === 'return' && <XCircle className="w-6 h-6 text-red-600" />}
+          {alertType === 'warning' && <Clock className="w-6 h-6 text-yellow-600" />}
+          {alertType === 'error' && <XCircle className="w-6 h-6 text-red-600" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`font-bold text-sm sm:text-base ${
+            alertType === 'confirm'
+              ? 'text-blue-800'
+              : alertType === 'delivered'
+              ? 'text-green-800'
+              : alertType === 'cancel' || alertType === 'return'
+              ? 'text-red-800'
+              : alertType === 'warning'
+              ? 'text-yellow-800'
+              : alertType === 'error'
+              ? 'text-red-800'
+              : 'text-blue-800'
+          }`}>
+            {alertType === 'confirm' && '✅ Confirmée !'}
+            {alertType === 'delivered' && '📦 Livrée !'}
+            {alertType === 'cancel' && '❌ Annulée !'}
+            {alertType === 'return' && '↩️ Retour !'}
+            {alertType === 'warning' && '⏳ En attente !'}
+            {alertType === 'error' && '❌ Erreur !'}
+          </p>
+          <p className={`text-xs sm:text-sm ${
+            alertType === 'confirm'
+              ? 'text-blue-700'
+              : alertType === 'delivered'
+              ? 'text-green-700'
+              : alertType === 'cancel' || alertType === 'return'
+              ? 'text-red-700'
+              : alertType === 'warning'
+              ? 'text-yellow-700'
+              : alertType === 'error'
+              ? 'text-red-700'
+              : 'text-blue-700'
+          }`}>
+            {successMessage}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowSuccessAlert(false)}
+          className={`flex-shrink-0 transition p-1 ${
+            alertType === 'confirm'
+              ? 'text-blue-400 hover:text-blue-600'
+              : alertType === 'delivered'
+              ? 'text-green-400 hover:text-green-600'
+              : alertType === 'cancel' || alertType === 'return'
+              ? 'text-red-400 hover:text-red-600'
+              : alertType === 'warning'
+              ? 'text-yellow-400 hover:text-yellow-600'
+              : alertType === 'error'
+              ? 'text-red-400 hover:text-red-600'
+              : 'text-blue-400 hover:text-blue-600'
+          }`}
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         {/* Liste des commandes */}
         {filteredOrders.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl shadow-lg">
