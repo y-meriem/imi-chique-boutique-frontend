@@ -194,18 +194,11 @@ useEffect(() => {
   if (orderSuccess) {
     return (
       <Layout>
-        <div className="min-h-screen bg-gradient-to-br from-pink-500 via-[#f77fbe] to-pink-300 to-indigo-50 flex items-center justify-center p-4">
+        <div className="min-h-screen  flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
             <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Commande Confirmée !</h2>
             <p className="text-gray-600 mb-6">Merci pour votre confiance 💝</p>
-
-            <div className="bg-pink-50 rounded-2xl p-6 mb-6">
-              <p className="text-sm text-gray-600 mb-2">Numéro de commande</p>
-              <p className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-pink-400 bg-clip-text text-transparent">
-                #{orderId}
-              </p>
-            </div>
 
             <div className="space-y-3 mb-6 text-left">
               <div className="flex items-center gap-3 text-sm text-gray-600">
@@ -237,7 +230,7 @@ useEffect(() => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-indigo-50 py-8">
+      <div className="min-h-screen  py-8">
         <div className="max-w-6xl mx-auto px-4">
           <button
             onClick={() => navigate('/')}
