@@ -412,7 +412,8 @@ const getStockStatusForColor = (product, color) => {
   <div className="max-w-7xl mx-auto px-4 pt-6 pb-8">
   <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white">
     <img 
-      src="/logo.png" 
+src={`${process.env.PUBLIC_URL}/logo.png`}
+
       alt="Imi Chique Boutique"
       className="w-full h-auto max-h-32 sm:max-h-36 md:max-h-40 lg:max-h-44 object-contain p-3 sm:p-4 md:p-5"
     />
@@ -705,29 +706,6 @@ const getStockStatusForColor = (product, color) => {
   </span>
 </button>
                       </div>
-
-                     {/* Stock Info */}
-<div className="text-xs">
-  {(() => {
-    const totalStock = getTotalStock(product);
-    
-    if (totalStock > 0) {
-      return (
-        <span className="text-green-600 font-semibold flex items-center gap-1">
-          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-          {totalStock} en stock
-        </span>
-      );
-    } else {
-      return (
-        <span className="text-red-600 font-semibold flex items-center gap-1">
-          <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-          Épuisé
-        </span>
-      );
-    }
-  })()}
-</div>
                     </div>
                   </div>
                 );
