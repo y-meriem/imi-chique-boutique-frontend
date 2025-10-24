@@ -15,15 +15,16 @@ export default function Sidebar({ showMenu, setShowMenu, cart, favorites }) {
 
   // Menu pour Admin
   const adminMenuItems = [
-    { icon: Home, text: "Accueil", path: "/" },
-    { icon: ShoppingBag, text: "Produits", path: "/products" },
-    { icon: Package, text: "Commandes", path: "/orders" },
-    { icon: Tag, text: "Codes Promo", path: "/promo-management" },
-    { icon: Gift, text: "Catégories", path: "/categories" },
-    { icon: Truck, text: "Livraison", path: "/livraisons" },
     { icon: Star, text: "Statistiques", path: "/statistics" },
-    { icon: User, text: "Users", path: "/user-management" },
+    { icon: Package, text: "Commandes", path: "/orders" },
+    { icon: Home, text: "Boutique", path: "/" },
+    { icon: ShoppingBag, text: "Produits", path: "/products" },
+    { icon: Gift, text: "Catégories", path: "/categories" },
+    { icon: Tag, text: "Codes Promo", path: "/promo-management" }, 
     { icon: Heart, text: "Avis", path: "/avis-management" },
+    { icon: Truck, text: "Livraison", path: "/livraisons" },
+    { icon: User, text: "Mon Profile", path: "/profile" },
+    { icon: User, text: "Users", path: "/user-management" },
   ];
 
   // Menu pour User connecté
