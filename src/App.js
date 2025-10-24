@@ -47,7 +47,7 @@ import StockManagement from './Pages/Stock/StockManagement';
 
 function App() {
   return (
-    <Router>
+   <Router basename="/imi-chique-boutique-frontend">
       <div className="App">
         <Routes>
 
