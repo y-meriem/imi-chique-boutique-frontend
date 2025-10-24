@@ -12,6 +12,8 @@ import './index.css';
 import CategoryList from './Pages/Category/CategoryList';
 import AddCategory from './Pages/Category/AddCategory';
 import UpdateCategory from './Pages/Category/UpdateCategory';
+import ForgotPassword from './Pages/Users/ForgotPassword';
+import VerifyCode from './Pages/Users/VerifyCode';
 
 
 import Orders from './Pages/Orders/Orders';
@@ -42,10 +44,11 @@ import MesCommandes from './Pages/Orders/MyOrders';
 
 function App() {
   return (
-   <Router basename="/imi-chique-boutique-frontend">
-     
+    <Router>
       <div className="App">
         <Routes>
+
+
           <Route path="/" element={<Home />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/orders" element={<ProtectedRoute  element={<Orders />} requiredRole="admin" />}  />
@@ -56,9 +59,12 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
+       
           <Route path="/profile" element={<ProtectedRoute element={<UserProfile />} />}/>
 
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-code" element={<VerifyCode />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} requiredRole="admin" />} />
           
