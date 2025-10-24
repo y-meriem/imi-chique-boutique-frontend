@@ -3,8 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import Layout from '../../components/layout/Layout';
 import productService from '../../services/productService';
-import categoryService from '../../services/categoryService';
-
 import {useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
@@ -32,16 +30,16 @@ const AddProduct = () => {
 
   const taillesDisponibles = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   const [categories, setCategories] = useState([]);
- useEffect(() => {
+  useEffect(() => {
   const loadCategories = async () => {
     try {
-      const response = await categoryService.getAllCategories();
-      if (response.success) {
-        setCategories(response.data || []);
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/categories`);
+      const data = await response.json();
+      if (data.success) {
+        setCategories(data.data || []);
       }
     } catch (error) {
       console.error('Erreur chargement catégories:', error);
-      setCategories([]);
     }
   };
   
@@ -346,7 +344,6 @@ const handleImageColorChange = (index, value) => {
                     value={formData.prix}
                     onChange={handleInputChange}
                     min="0"
-                    step="0.01"
                     className="w-full px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition text-sm sm:text-base"
                   />
                 </div>
@@ -361,7 +358,6 @@ const handleImageColorChange = (index, value) => {
                     value={formData.promo}
                     onChange={handleInputChange}
                     min="0"
-                    step="0.01"
                     className="w-full px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition text-sm sm:text-base"
                   />
                 </div>
