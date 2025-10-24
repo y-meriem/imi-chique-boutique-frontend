@@ -145,7 +145,7 @@ const StockManagement = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-gray-600 text-xs sm:text-sm mb-1">En Stock</p>
-                      <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{stats.stock_Disponible}</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{stats.stock_ok}</p>
                     </div>
                     <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-500 opacity-20" />
                   </div>
