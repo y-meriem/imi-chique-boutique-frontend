@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Edit2, Eye, Search, Grid, List as ListIcon, Filter, X, ChevronDown, Package, TrendingUp, AlertCircle, Plus } from 'lucide-react';
+import { Trash2,ShoppingBag, Edit2, Eye, Search, Grid, List as ListIcon, Filter, X, ChevronDown, Package, TrendingUp, AlertCircle, Plus, TrendingDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../components/layout/Layout';
 
@@ -17,6 +17,8 @@ const ProductList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('newest');
   const [filterStatus, setFilterStatus] = useState('all');
+  const navigate = useNavigate();
+
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -100,6 +102,16 @@ const ProductList = () => {
   }
 };
 
+  const handleView = (id) => {
+    // Navigation vers la page de détail du produit
+     navigate(`/products/${id}`);
+  };
+
+  const handleEdit = (id) => {
+    // Navigation vers la page d'édition du produit
+     navigate(`/products/edit/${id}`);
+  };
+
   const handleColorClick = (productId, color) => {
     setSelectedColors(prev => ({
       ...prev,
@@ -137,7 +149,6 @@ const ProductList = () => {
     }
   });
 
-   const navigate = useNavigate();
 // Fonction pour calculer le stock total
 const calculateTotalStock = (product) => {
   if (!product.stock || product.stock.length === 0) return 0;
@@ -194,33 +205,11 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
   return (
      <Layout>
       
-       <div className="max-w-6xl mx-auto">
-        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-pink-100">
+       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
           {/* Header - Mobile Optimized */}
-   <div className="mb-6 sm:mb-8">
-  <div className="flex items-center justify-between mb-3">
-    <div className="flex items-center gap-3">
-      <div className="bg-gradient-to-br from-pink-500 to-pink-300 p-3 rounded-2xl shadow-lg">
-        <span className="text-2xl sm:text-3xl">🛍️</span>
-      </div>
-      <div>
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-pink-400">
-          Mes Produits
-        </h1>
-      </div>
-    </div>
-     
-    <button 
-      onClick={() => navigate('/products/add')}
-      className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105"
-    >
-      <Plus size={20} />
-      <span className="hidden sm:inline">Ajouter Produit</span>
-      <span className="sm:hidden">Ajouter</span>
-    </button>
-  </div>
-</div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+   
         {/* Message Notification */}
         {message.text && (
           <div 
@@ -235,44 +224,63 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
           </div>
         )}
 
-        {/* Stats Cards - Améliorées */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-          <div className="group bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-green-200 hover:border-green-400 cursor-pointer">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl">✅</span>
-              <TrendingUp className="text-green-600 opacity-50 group-hover:opacity-100 transition" size={20} />
-            </div>
-            <p className="text-sm text-gray-600 font-semibold mb-1">Produits Actifs</p>
-            <p className="text-3xl font-black text-green-600">{activeCount}</p>
-          </div>
+       
 
-          <div className="group bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-red-200 hover:border-red-400 cursor-pointer">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl">⏸️</span>
-              <AlertCircle className="text-red-600 opacity-50 group-hover:opacity-100 transition" size={20} />
-            </div>
-            <p className="text-sm text-gray-600 font-semibold mb-1">Inactifs</p>
-            <p className="text-3xl font-black text-red-600">{inactiveCount}</p>
-          </div>
+          <div className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 bg-clip-text text-transparent mb-2 flex items-center gap-2 sm:gap-3">
+                 <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
 
-          <div className="group bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-orange-200 hover:border-orange-400 cursor-pointer">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl">🏷️</span>
-              <TrendingUp className="text-orange-600 opacity-50 group-hover:opacity-100 transition" size={20} />
+                  Mes Produits
+                </h1>
+                <p className="text-sm sm:text-base text-gray-600 font-medium">
+                 Gérez vos produits et suivez votre inventaire
+                </p>
+              </div>
+                <button 
+      onClick={() => navigate('/products/add')}
+      className="flex items-center gap-2 bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all hover:scale-105"
+    >
+      <Plus size={20} />
+      <span className="hidden sm:inline">Ajouter Produit</span>
+      <span className="sm:hidden">Ajouter</span>
+    </button>
             </div>
-            <p className="text-sm text-gray-600 font-semibold mb-1">En Promotion</p>
-            <p className="text-3xl font-black text-orange-600">{withPromoCount}</p>
-          </div>
 
-          <div className="group bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 shadow-md hover:shadow-xl transition-all border-2 border-purple-200 hover:border-purple-400 cursor-pointer">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-2xl">📦</span>
-              <Package className="text-purple-600 opacity-50 group-hover:opacity-100 transition" size={20} />
+            {/* Statistiques */}
+            <div className="grid grid-cols-3 gap-3 sm:gap-4 mt-4 sm:mt-6">
+              <div className="bg-gradient-to-br from-pink-50 to-rose-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-pink-200/50 hover:shadow-xl hover:shadow-pink-300/50 transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">Produits Actifs</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-pink-600">{activeCount}</p>
+                  </div>
+                  <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-pink-500 opacity-20" />
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-emerald-50 to-teal-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-emerald-200/50 hover:shadow-xl hover:shadow-emerald-300/50 transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">Inactifs</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{inactiveCount}</p>
+                  </div>
+                  <TrendingDown className="w-8 h-8 sm:w-12 sm:h-12 text-emerald-500 opacity-20" />
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-shadow">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-600 text-xs sm:text-sm mb-1">En Promotion</p>
+                    <p className="text-2xl sm:text-3xl font-bold text-blue-600">{withPromoCount}</p>
+                  </div>
+                  <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-blue-500 opacity-20" />
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-gray-600 font-semibold mb-1">Stock Faible</p>
-            <p className="text-3xl font-black text-purple-600">{lowStockCount}</p>
           </div>
-        </div>
 
         {/* Barre de recherche et filtres - Version mobile optimisée */}
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-6 border border-pink-100">
@@ -545,14 +553,14 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
                   {/* Actions */}
                   <div className="grid grid-cols-3 gap-2">
                     <button
-                      onClick={() => navigate(`/products/${product.id}`)}
+                      onClick={() => handleView(product.id)}
                       className="bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl transition-all font-bold text-sm flex items-center justify-center gap-1 hover:scale-105 shadow-md"
                     >
                       <Eye size={16} />
                       <span className="hidden sm:inline">Voir</span>
                     </button>
                     <button
-                       onClick={() => navigate(`/products/edit/${product.id}`)}
+                      onClick={() => handleEdit(product.id)}
                       className="bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-xl transition-all font-bold text-sm flex items-center justify-center gap-1 hover:scale-105 shadow-md"
                     >
                       <Edit2 size={16} />
@@ -681,14 +689,14 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
                 {/* Actions */}
                 <div className="flex sm:flex-col gap-2 justify-center items-center">
                   <button
-                    onClick={() => navigate(`/products/${product.id}`)}
+                    onClick={() => handleView(product.id)}
                     className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-xl transition-all flex items-center justify-center hover:scale-110 shadow-md"
                     title="Voir le produit"
                   >
                     <Eye size={18} />
                   </button>
                   <button
-                     onClick={() => navigate(`/products/edit/${product.id}`)}
+                    onClick={() => handleEdit(product.id)}
                     className="bg-amber-500 hover:bg-amber-600 text-white p-3 rounded-xl transition-all flex items-center justify-center hover:scale-110 shadow-md"
                     title="Modifier"
                   >
@@ -711,7 +719,7 @@ const lowStockCount = countProductsWithLowStockByColor(products, 10);
 
      
     </div>
-    </div>
+
   </Layout>
   );
 };
