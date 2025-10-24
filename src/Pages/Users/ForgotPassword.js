@@ -15,20 +15,13 @@ const ForgotPassword = () => {
     setError('');
     setLoading(true);
 
-    console.log('========== DEBUT DU PROCESSUS ==========');
-    console.log('📧 Email saisi:', email);
-
+   
     try {
-      console.log('🔄 Appel à userService.forgotPassword...');
       const response = await userService.forgotPassword(email);
-      console.log('✅ Réponse reçue:', response);
-
-      console.log('🚀 Tentative de navigation vers /verify-code');
-      console.log('📦 State à passer:', { email });
+    
       
       navigate('/verify-code', { state: { email } });
       
-      console.log('✅ Navigation exécutée');
     } catch (err) {
       console.error('❌ ERREUR:', err);
       console.error('❌ Message:', err.message);
@@ -36,7 +29,6 @@ const ForgotPassword = () => {
       setLoading(false);
     }
 
-    console.log('========== FIN DU PROCESSUS ==========');
   };
 
   return (
