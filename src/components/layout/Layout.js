@@ -3,9 +3,15 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import CartDrawer from "./CartDrawer.js";
 import Footer from "./Footer";
+import { userService } from "../../services/userService";
 
 export default function Layout({ children }) {
-  // ✅ Initialisation DIRECTE depuis localStorage (pas d'attente)
+  const currentUser = userService.getCurrentUser();
+  const isAdmin = currentUser?.type === 'admin';
+
+  const [showMenu, setShowMenu] = useState(() => {
+    return isAdmin && typeof window !== 'undefined' && window.innerWidth >= 1024;
+  });
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
@@ -14,10 +20,6 @@ export default function Layout({ children }) {
   const [favorites, setFavorites] = useState(() => {
     const savedFavorites = localStorage.getItem('favorites');
     return savedFavorites ? JSON.parse(savedFavorites) : [];
-  });
-
-  const [showMenu, setShowMenu] = useState(() => {
-    return typeof window !== 'undefined' && window.innerWidth >= 1024;
   });
 
   const [showCart, setShowCart] = useState(false);
