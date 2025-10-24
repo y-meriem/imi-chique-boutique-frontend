@@ -307,45 +307,32 @@ const Favorites = () => {
                         </div>
                       )}
 
-                      {/* Prix et bouton */}
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
-                          <span className="text-xl font-bold bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 bg-clip-text text-transparent">
-                            {prixFinal} DA
-                          </span>
-                          {remise > 0 && (
-                            <span className="block text-xs line-through text-gray-400">
-                              {product.prix} DA
-                            </span>
-                          )}
-                        </div>
-                      <button
-  onClick={(e) => {
-    e.stopPropagation();
-    navigate(`/products/${product.id}`);
-  }}
-  className="bg-gradient-to-r  from-pink-500 via-[#f77fbe] to-pink-300  text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all hover:shadow-xl hover:scale-105 flex items-center gap-1"
->
-  <Sparkles className="w-4 h-4" />
-  Plus de détails
-</button>
-
-                      </div>
+                  {/* Prix et bouton */}
+<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
+  <div>
+    <span className="text-xl font-bold bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 bg-clip-text text-transparent">
+      {Math.floor(prixFinal)} DA
+    </span>
+    {remise > 0 && (
+      <span className="block text-xs line-through text-gray-400">
+        {Math.floor(product.prix)} DA
+      </span>
+    )}
+  </div>
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      navigate(`/products/${product.id}`);
+    }}
+    className="bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg transition-all hover:shadow-xl hover:scale-105 flex items-center gap-1 w-full sm:w-auto justify-center"
+  >
+    <Sparkles className="w-4 h-4" />
+    Plus de détails
+  </button>
+</div>
 
                       {/* Stock */}
-                      <div className="text-xs">
-                        {product.quantite > 0 ? (
-                          <span className="text-green-600 font-semibold flex items-center gap-1">
-                            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                            {product.quantite} en stock
-                          </span>
-                        ) : (
-                          <span className="text-red-600 font-semibold flex items-center gap-1">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                            Épuisé
-                          </span>
-                        )}
-                      </div>
+                 
                     </div>
                   </div>
                 );
