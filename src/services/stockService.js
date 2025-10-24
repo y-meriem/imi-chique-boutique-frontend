@@ -1,5 +1,5 @@
 // services/stockService.js
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -13,7 +13,7 @@ class StockService {
   // Récupérer tout le stock
   async getAllStock() {
     try {
-      const response = await fetch(`${API_URL}/stock`, {
+      const response = await fetch(`${API_URL}/api/stock`, {
         headers: getAuthHeaders()
       });
 
@@ -33,7 +33,7 @@ class StockService {
   // Récupérer les statistiques
   async getStockStats() {
     try {
-      const response = await fetch(`${API_URL}/stock/stats`, {
+      const response = await fetch(`${API_URL}/api/stock/stats`, {
         headers: getAuthHeaders()
       });
 
@@ -53,7 +53,7 @@ class StockService {
   // Rechercher dans le stock
   async searchStock(query) {
     try {
-      const response = await fetch(`${API_URL}/stock/search?search=${encodeURIComponent(query)}`, {
+      const response = await fetch(`${API_URL}/api/stock/search?search=${encodeURIComponent(query)}`, {
         headers: getAuthHeaders()
       });
 
@@ -73,7 +73,7 @@ class StockService {
   // Récupérer le stock d'un produit
   async getStockByProduct(productId) {
     try {
-      const response = await fetch(`${API_URL}/stock/product/${productId}`, {
+      const response = await fetch(`${API_URL}/api/stock/product/${productId}`, {
         headers: getAuthHeaders()
       });
 
@@ -93,7 +93,7 @@ class StockService {
   // Mettre à jour le stock
   async updateStock(stockId, quantite, operation = 'set') {
     try {
-      const response = await fetch(`${API_URL}/stock/${stockId}`, {
+      const response = await fetch(`${API_URL}/api/stock/${stockId}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({ quantite, operation })
