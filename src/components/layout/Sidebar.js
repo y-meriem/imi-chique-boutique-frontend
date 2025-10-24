@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Home, ShoppingBag, Truck, Heart, Package, Gift, Star, User, Tag, LogOut, ShoppingCart, UserPlus, LogIn } from "lucide-react";
+import { Home,Boxes,UserCircle,BarChart3, ShoppingBag, Truck, Heart, Package, Gift, Star, User, Tag, LogOut, ShoppingCart, UserPlus, LogIn } from "lucide-react";
 import { userService } from "../../services/userService";
 
 export default function Sidebar({ showMenu, setShowMenu, cart, favorites }) {
@@ -15,15 +15,16 @@ export default function Sidebar({ showMenu, setShowMenu, cart, favorites }) {
 
   // Menu pour Admin
   const adminMenuItems = [
-    { icon: Star, text: "Statistiques", path: "/statistics" },
+    { icon:  BarChart3, text: "Statistiques", path: "/statistics" },
     { icon: Package, text: "Commandes", path: "/orders" },
     { icon: Home, text: "Boutique", path: "/" },
     { icon: ShoppingBag, text: "Produits", path: "/products" },
-    { icon: Gift, text: "Catégories", path: "/categories" },
+     { icon: Boxes, text: "Stock", path: "/stock" },
+    { icon: Star, text: "Catégories", path: "/categories" },
     { icon: Tag, text: "Codes Promo", path: "/promo-management" }, 
     { icon: Heart, text: "Avis", path: "/avis-management" },
     { icon: Truck, text: "Livraison", path: "/livraisons" },
-    { icon: User, text: "Mon Profile", path: "/profile" },
+    { icon: UserCircle, text: "Mon Profile", path: "/profile" },
     { icon: User, text: "Users", path: "/user-management" },
   ];
 
