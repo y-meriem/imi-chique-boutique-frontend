@@ -27,7 +27,12 @@ const Login = () => {
 
     try {
       await userService.login(formData);
+       const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.type === 'admin') {
+      navigate('/statistics');
+    } else {
       navigate('/');
+    }
     } catch (err) {
       setError(err.message);
     } finally {
