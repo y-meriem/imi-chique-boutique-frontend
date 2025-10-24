@@ -440,7 +440,7 @@ const handleSubmit = async (e) => {
                     value={formData.prix}
                     onChange={handleInputChange}
                     min="0"
-                    step="0.01"
+                   
                     className="w-full px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition text-sm sm:text-base"
                   />
                 </div>
@@ -455,7 +455,7 @@ const handleSubmit = async (e) => {
                     value={formData.promo}
                     onChange={handleInputChange}
                     min="0"
-                    step="0.01"
+                  
                     className="w-full px-2 sm:px-4 py-2.5 sm:py-3 border-2 border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition text-sm sm:text-base"
                   />
                 </div>
