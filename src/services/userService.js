@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 // Configurer axios pour inclure le token
 const getAuthHeaders = () => {
@@ -16,7 +16,7 @@ export const userService = {
   // Inscription
   register: async (userData) => {
     try {
-      const response = await axios.post(`${API_URL}/users/register`, userData);
+      const response = await axios.post(`${API_URL}/api/users/register`, userData);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -31,7 +31,7 @@ export const userService = {
  login: async (credentials) => {
   try {
     // credentials peut contenir { email, password } OU { telephone, password }
-    const response = await axios.post(`${API_URL}/users/login`, credentials);
+    const response = await axios.post(`${API_URL}/api/users/login`, credentials);
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -51,7 +51,7 @@ export const userService = {
   // Mot de passe oublié
   forgotPassword: async (email) => {
     try {
-      const response = await axios.post(`${API_URL}/users/forgot-password`, { email });
+      const response = await axios.post(`${API_URL}/api/users/forgot-password`, { email });
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Erreur lors de la demande');
@@ -67,7 +67,7 @@ verifyResetCode: async (email, code) => {
 },
 resetPassword: async (email, code, newPassword) => {
   try {
-    const response = await axios.post(`${API_URL}/users/reset-password`, {
+    const response = await axios.post(`${API_URL}/api/users/reset-password`, {
       email, code, newPassword
     });
     return response.data;
@@ -78,7 +78,7 @@ resetPassword: async (email, code, newPassword) => {
   // Mot de passe oublié par téléphone
 forgotPasswordByPhone: async (telephone) => {
   try {
-    const response = await axios.post(`${API_URL}/users/forgot-password-phone`, { telephone });
+    const response = await axios.post(`${API_URL}/api/users/forgot-password-phone`, { telephone });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Erreur lors de la demande');
@@ -88,7 +88,7 @@ forgotPasswordByPhone: async (telephone) => {
   // Obtenir le profil
   getProfile: async () => {
     try {
-      const response = await axios.get(`${API_URL}/users/profile`, getAuthHeaders());
+      const response = await axios.get(`${API_URL}/api/users/profile`, getAuthHeaders());
       return response.data.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Erreur lors de la récupération du profil');
@@ -100,7 +100,7 @@ getAllUsers: async () => {
   try {
     
     // ✅ APRÈS (CORRECT)
-    const response = await axios.get(`${API_URL}/users`, getAuthHeaders());
+    const response = await axios.get(`${API_URL}/api/users`, getAuthHeaders());
     return response.data.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Erreur lors de la récupération des utilisateurs');
@@ -110,7 +110,7 @@ getAllUsers: async () => {
   // Obtenir un utilisateur par ID (Admin)
   getUserById: async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/users/${id}`, getAuthHeaders());
+      const response = await axios.get(`${API_URL}/api/users/${id}`, getAuthHeaders());
       return response.data.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Utilisateur non trouvé');
@@ -120,7 +120,7 @@ getAllUsers: async () => {
   // Mettre à jour un utilisateur (Admin)
   updateUser: async (id, userData) => {
     try {
-      const response = await axios.put(`${API_URL}/users/${id}`, userData, getAuthHeaders());
+      const response = await axios.put(`${API_URL}/api/users/${id}`, userData, getAuthHeaders());
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Erreur lors de la mise à jour');
@@ -129,7 +129,7 @@ getAllUsers: async () => {
   // Mettre à jour le profil de l'utilisateur connecté
 updateProfile: async (userData) => {
   try {
-    const response = await axios.put(`${API_URL}/users/profile`, userData, getAuthHeaders());
+    const response = await axios.put(`${API_URL}/api/users/profile`, userData, getAuthHeaders());
     return response.data;
   } catch (error) {
     const message = error.response?.data?.message || 'Erreur lors de la mise à jour du profil';
@@ -140,7 +140,7 @@ updateProfile: async (userData) => {
   // Supprimer un utilisateur (Admin)
   deleteUser: async (id) => {
     try {
-      const response = await axios.delete(`${API_URL}/users/${id}`, getAuthHeaders());
+      const response = await axios.delete(`${API_URL}/api/users/${id}`, getAuthHeaders());
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Erreur lors de la suppression');
