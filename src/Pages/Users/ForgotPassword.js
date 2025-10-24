@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { userService } from '../../services/userService';
 import { Heart, Sparkles, Mail, ArrowLeft, AlertCircle, Star, Key } from 'lucide-react';
@@ -9,48 +9,26 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [debugInfo, setDebugInfo] = useState('');
-
-  // ✅ Afficher les infos de configuration au chargement
-  useEffect(() => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-    const fullUrl = `${apiUrl}/api/users/forgot-password`;
-    setDebugInfo(fullUrl);
-    console.log('🌐 API URL configurée:', apiUrl);
-    console.log('🔗 URL complète forgot-password:', fullUrl);
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    console.log('📧 Email envoyé:', email);
-    console.log('🔗 URL qui sera appelée:', debugInfo);
-
+   
     try {
-      console.log('⏳ Appel en cours...');
       const response = await userService.forgotPassword(email);
-      console.log('✅ Réponse reçue:', response);
+    
       
       navigate('/verify-code', { state: { email } });
       
     } catch (err) {
-      console.error('❌ ERREUR COMPLÈTE:', err);
-      console.error('❌ Message d\'erreur:', err.message);
-      console.error('❌ Stack:', err.stack);
-      
-      // Afficher une erreur plus détaillée
-      let errorMessage = err.message;
-      if (err.message.includes('Network Error')) {
-        errorMessage = `Erreur de connexion au serveur. URL: ${debugInfo}`;
-      } else if (err.message.includes('404')) {
-        errorMessage = `Route non trouvée (404). Vérifiez l'URL: ${debugInfo}`;
-      }
-      
-      setError(errorMessage);
+      console.error('❌ ERREUR:', err);
+      console.error('❌ Message:', err.message);
+      setError(err.message);
       setLoading(false);
     }
+
   };
 
   return (
@@ -91,20 +69,11 @@ const ForgotPassword = () => {
                 <p className="text-base md:text-lg text-gray-500">Entre ton email pour recevoir un code 🔑</p>
               </div>
 
-              {/* ✅ Debug Info (à retirer en production) */}
-              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs">
-                <p className="font-mono text-blue-700">🔧 Debug - URL appelée:</p>
-                <p className="font-mono text-blue-600 break-all">{debugInfo}</p>
-              </div>
-
               {/* Error Message */}
               {error && (
                 <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-2xl flex items-start gap-3 shadow-sm">
                   <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <div className="flex-1">
-                    <p className="text-red-700 text-sm font-medium">{error}</p>
-                    <p className="text-red-600 text-xs mt-1 font-mono break-all">URL: {debugInfo}</p>
-                  </div>
+                  <p className="text-red-700 text-sm font-medium">{error}</p>
                 </div>
               )}
 
