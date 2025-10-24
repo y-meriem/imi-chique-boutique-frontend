@@ -59,7 +59,7 @@ export const userService = {
   },
 verifyResetCode: async (email, code) => {
   try {
-    const response = await axios.post(`${API_URL}/users/verify-code`, { email, code });
+    const response = await axios.post(`${API_URL}/api/users/verify-code`, { email, code });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Code invalide');
