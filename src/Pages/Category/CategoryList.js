@@ -77,14 +77,14 @@ const CategoryList = () => {
           {/* Header */}
           <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-black text-gray-800 mb-2">
-                  🏷️ Catégories
-                </h1>
-                <p className="text-gray-600">
-                  Gérez vos catégories de produits
-                </p>
-              </div>
+             <div>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-300 bg-clip-text text-transparent mb-2 flex items-center gap-2 sm:gap-3">
+        🏷️ Catégories
+      </h1>
+      <p className="text-sm sm:text-base text-gray-600 font-medium">
+        Gérez vos catégories de produits
+      </p>
+    </div>
               <Link
                 to="/categories/add"
                 className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-pink-500 via-[#f77fbe] to-pink-400 text-white rounded-xl hover:shadow-xl hover:scale-105 active:scale-95 transition-all font-bold text-center"
