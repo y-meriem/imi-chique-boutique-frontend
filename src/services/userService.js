@@ -11,6 +11,10 @@ const getAuthHeaders = () => {
     }
   };
 };
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  timeout: 90000, // 90 secondes au lieu de 5
+});
 
 export const userService = {
   // Inscription
@@ -51,7 +55,7 @@ export const userService = {
   // Mot de passe oublié
   forgotPassword: async (email) => {
     try {
-      const response = await axios.post(`${API_URL}/api/users/forgot-password`, { email });
+      const response = await axiosInstance.post('/api/users/forgot-password', { email });
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Erreur lors de la demande');
