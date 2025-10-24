@@ -632,7 +632,6 @@ const showSuccess = (message, type = 'success') => {
                             type="number"
                             min="1"
                             max="100"
-                            step="0.01"
                             value={formData.pourcentage_reduction}
                             onChange={(e) => setFormData({...formData, pourcentage_reduction: e.target.value})}
                             className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.pourcentage_reduction ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-sm md:text-base`}
@@ -646,7 +645,6 @@ const showSuccess = (message, type = 'success') => {
                           <input
                             type="number"
                             min="1"
-                            step="0.01"
                             value={formData.montant_reduction}
                             onChange={(e) => setFormData({...formData, montant_reduction: e.target.value})}
                             className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 ${errors.montant_reduction ? 'border-red-300' : 'border-gray-200'} rounded-lg md:rounded-xl focus:border-pink-400 focus:outline-none text-sm md:text-base`}
