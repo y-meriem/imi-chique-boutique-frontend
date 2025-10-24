@@ -42,6 +42,9 @@ import MyAvis from './Pages/Avis/MyAvis';
 import MesCommandes from './Pages/Orders/MyOrders';
 
 
+import StockManagement from './Pages/Stock/StockManagement';
+
+
 function App() {
   return (
     <Router>
@@ -71,6 +74,7 @@ function App() {
           <Route path="/promo-management" element={<ProtectedRoute element={<PromoManagement />} requiredRole="admin" />} />
           <Route path="/livraisons"  element={<ProtectedRoute element={<AdminDelivery />} requiredRole="admin" />}/>
           <Route path="/avis-management" element={<ProtectedRoute element={<AvisManagement />} requiredRole="admin" />} />
+          <Route path="/stock" element={<ProtectedRoute element={<StockManagement />} requiredRole="admin" />} />
 
 
 
