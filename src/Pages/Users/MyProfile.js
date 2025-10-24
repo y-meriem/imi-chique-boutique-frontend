@@ -47,20 +47,23 @@ const MyProfile = () => {
     }));
   };
 
-  const handleUpdate = async () => {
-    try {
-      setError('');
-      setSuccess('');
-      await userService.updateUser(profile.id, formData);
-      setProfile({ ...profile, ...formData });
-      setIsEditing(false);
-      setSuccess('Profil mis à jour avec succès ! 🎉');
-      setTimeout(() => setSuccess(''), 3000);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
+const handleUpdate = async () => {
+  try {
+    setError('');
+    setSuccess('');
+    
+    // ✅ CORRECTION : Appeler updateProfile au lieu de updateUser
+    const response = await userService.updateProfile(formData);
+    
+    setProfile({ ...profile, ...formData });
+    setIsEditing(false);
+    setSuccess(response.message || 'Profil mis à jour avec succès ! 🎉');
+    setTimeout(() => setSuccess(''), 3000);
+  } catch (err) {
+    // ✅ Le message d'erreur détaillé du backend s'affichera maintenant
+    setError(err.message);
+  }
+};
   if (loading) {
     return (
       <Layout>
