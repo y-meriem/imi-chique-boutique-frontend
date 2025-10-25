@@ -1,6 +1,6 @@
 // Pages/Stock/StockManagement.js
 import React, { useState, useEffect } from 'react';
-import { Package, Search, AlertTriangle, TrendingUp, TrendingDown, Plus, Minus, BarChart3, CheckCircle, X } from 'lucide-react';
+import { Package, Search, AlertTriangle, TrendingUp, TrendingDown, Plus, Minus, BarChart3, CheckCircle, X, Save } from 'lucide-react';
 import stockService from '../../services/stockService';
 import Layout from '../../components/layout/Layout';
 
@@ -12,6 +12,7 @@ const StockManagement = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [updating, setUpdating] = useState({});
+  const [editingQuantities, setEditingQuantities] = useState({});
 
   useEffect(() => {
     loadData();
@@ -83,11 +84,23 @@ const StockManagement = () => {
     try {
       await stockService.updateStock(id, newValue, 'set');
       await loadData();
+      setEditingQuantities(prev => {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      });
     } catch (error) {
       console.error('Erreur mise à jour:', error);
     } finally {
       setUpdating(prev => ({ ...prev, [id]: false }));
     }
+  };
+
+  const handleQuantityChange = (id, value) => {
+    setEditingQuantities(prev => ({
+      ...prev,
+      [id]: value
+    }));
   };
 
   const getStockStatus = (quantite) => {
@@ -302,12 +315,22 @@ const StockManagement = () => {
                         
                         <input
                           type="number"
-                          value={item.quantite}
-                          onChange={(e) => setQuantity(item.id, e.target.value)}
+                          value={editingQuantities[item.id] !== undefined ? editingQuantities[item.id] : item.quantite}
+                          onChange={(e) => handleQuantityChange(item.id, e.target.value)}
                           disabled={isUpdating}
                           className="w-16 sm:w-20 px-2 sm:px-3 py-2 text-center text-base sm:text-lg font-bold border-2 border-gray-300 rounded-lg focus:border-pink-400 focus:outline-none disabled:bg-gray-100"
                           min="0"
                         />
+                        
+                        {editingQuantities[item.id] !== undefined && editingQuantities[item.id] !== item.quantite.toString() && (
+                          <button
+                            onClick={() => setQuantity(item.id, editingQuantities[item.id])}
+                            disabled={isUpdating}
+                            className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-lg active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Save className="w-4 h-4" />
+                          </button>
+                        )}
                         
                         <button
                           onClick={() => updateQuantity(item.id, 1)}
